@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteArea, getArea, getAreas, postArea, putArea } from '../controllers/area.controller.js'
 
-export const routerAreas = Router();
+export const routerAreas = Router()
 
-routerAreas.get("/", (req, res) => {});
+routerAreas.get('/', getAreas)
 
-routerAreas.get("/:id", (req, res) => {});
+routerAreas.get('/:id', getArea)
 
-routerAreas.post("/", (req, res) => {});
+routerAreas.post('/', postArea)
 
-routerAreas.delete("/:id", (req, res) => {});
+routerAreas.delete('/:id', deleteArea)
 
-routerAreas.put("/:id", (req, res) => {});
+routerAreas.put('/:id', putArea)

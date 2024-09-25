@@ -1,14 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteUsuario, getUsuario, getUsuarios, postUsuario, putUsuario } from '../controllers/usuario.controller.js'
 
-export const routerUsuarios = Router();
+export const routerUsuarios = Router()
 
-routerUsuarios.get("/", (req, res) => {});
+routerUsuarios.get('/', getUsuarios)
 
-routerUsuarios.get("/:id", (req, res) => {});
+routerUsuarios.get('/:id', getUsuario)
 
-routerUsuarios.post("/", (req, res) => {});
+routerUsuarios.post('/', postUsuario)
 
-routerUsuarios.delete("/:id", (req, res) => {});
+routerUsuarios.delete('/:id', deleteUsuario)
 
-routerUsuarios.put("/:id", (req, res) => {});
-
+routerUsuarios.put('/:id', putUsuario)

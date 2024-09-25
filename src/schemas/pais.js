@@ -7,3 +7,6 @@ const paisSchema = z.object({
 export function validatePais(object){
     return paisSchema.safeParse(object);
 }
+export function validatePartialPais(object){
+    return paisSchema.partial().safeParse(object);
+}

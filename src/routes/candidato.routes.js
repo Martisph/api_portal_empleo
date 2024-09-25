@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteCandidato, getCandidato, getCandidatos, postCandidato, putCandidato } from '../controllers/candidato.controller.js'
 
-export const routerCandidatos = Router();
+export const routerCandidatos = Router()
 
-routerCandidatos.get("/", (req, res) => {});
+routerCandidatos.get('/', getCandidatos)
 
-routerCandidatos.get("/:id", (req, res) => {});
+routerCandidatos.get('/:id', getCandidato)
 
-routerCandidatos.post("/", (req, res) => {});
+routerCandidatos.post('/', postCandidato)
 
-routerCandidatos.delete("/:id", (req, res) => {});
+routerCandidatos.delete('/:id', deleteCandidato)
 
-routerCandidatos.put("/:id", (req, res) => {});
+routerCandidatos.put('/:id', putCandidato)
