@@ -24,8 +24,8 @@ export class Ubicacion {
   static async postUbicacion ({ data }) {
     try {
       const { rows } = await pool.query(
-        'INSERT INTO Ubicaciones (id_ubicacion, fk_id_departamento, nombre) VALUES($1, $2, $3) RETURNING *',
-        [data.id_ubicacion, data.fk_id_departamento, data.nombre]
+        'INSERT INTO Ubicaciones (fk_id_departamento, nombre) VALUES($1, $2, $3) RETURNING *',
+        [data.fk_id_departamento, data.nombre]
       )
       return rows[0]
     } catch (e) {
@@ -49,8 +49,8 @@ export class Ubicacion {
   static async putUbicacion ({ id }, { data }) {
     try {
       const { rows } = await pool.query(
-        'UPDATE Ubicaciones SET id_ubicacion = $1, fk_id_departamento = $2, nombre = $3 WHERE id_ubicacion = $4 RETURNING *',
-        [data.id_ubicacion, data.fk_id_departamento, data.nombre, id]
+        'UPDATE Ubicaciones SET fk_id_departamento = $1, nombre = $2 WHERE id_ubicacion = $3 RETURNING *',
+        [data.fk_id_departamento, data.nombre, id]
       )
       return rows[0]
     } catch (e) {

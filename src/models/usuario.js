@@ -2,19 +2,24 @@ import { pool } from '../database/db.js'
 
 export class Usuario {
   static async getUsuarios () {
-    const { rows } = await pool.query('SELECT * FROM Usuarios')
-    return rows
+    try {
+      const { rows } = await pool.query('SELECT * FROM Usuarios')
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ')
+    }
   }
 
-  static async getUsuario (id) {
-    const { rows } = await pool.query(
-      'SELECT * FROM Usuarios WHERE id_usuario =$1',
-      [id]
-    )
-    if (rows.length === 0) {
-      return { message: 'User no encontrado' }
+  static async getUsuario ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        'SELECT * FROM Usuarios WHERE id_usuario =$1',
+        [id]
+      )
+      return rows[0]
+    } catch (e) {
+      throw new Error(' Internal error ')
     }
-    return rows[0]
   }
 
   static async postUsuario ({ data }) {
@@ -37,37 +42,43 @@ export class Usuario {
     }
   }
 
-  static async deleteUsuario (id) {
-    const { rowCount } = await pool.query(
-      'DELETE FROM Usuarios WHERE id_usuario = $1 RETURNING *',
-      [id]
-    )
-    if (rowCount === 0) {
-      return { message: 'User no encontrado' }
+  static async deleteUsuario ({ id }) {
+    try {
+      const { rowCount } = await pool.query(
+        'DELETE FROM Usuarios WHERE id_usuario = $1 RETURNING *',
+        [id]
+      )
+      if(rowCount) return true
+      return false
+    } catch (e) {
+      throw new Error(' Internal error ')
     }
-    return { message: 'usuario eliminado' }
   }
 
-  static async putUsuario (id, { data }) {
-    const { rows } = await pool.query(
-      `UPDATE Usuarios SET 
-            fk_id_ubicacion = $1
-            nombre = $2
-            email = $3
-            contrasena = $4
-            rol = $5
-            fecha_creacion = $6
-            WHERE id_usuario = $7 RETURNING *`,
-      [
-        data.fk_id_ubicacion,
-        data.nombre,
-        data.email,
-        data.contrasena,
-        data.rol,
-        data.fecha_creacion,
-        id
-      ]
-    )
-    return rows[0]
+  static async putUsuario ({ id }, { data }) {
+    try {
+      const { rows } = await pool.query(
+        `UPDATE Usuarios SET 
+              fk_id_ubicacion = $1
+              nombre = $2
+              email = $3
+              contrasena = $4
+              rol = $5
+              fecha_creacion = $6
+              WHERE id_usuario = $7 RETURNING *`,
+        [
+          data.fk_id_ubicacion,
+          data.nombre,
+          data.email,
+          data.contrasena,
+          data.rol,
+          data.fecha_creacion,
+          id
+        ]
+      )
+      return rows[0]
+    } catch (e) {
+      throw new Error(' Internal error ')
+    }
   }
 }

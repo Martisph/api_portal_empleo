@@ -26,9 +26,9 @@ export class CategoriaEstudio {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Categoria_Estudios 
-      (id_categoria_estudio, nombre, descripcion) 
+      (nombre, descripcion) 
       VALUES($1, $2, $3) RETURNING *`,
-        [data.id_categoria_estudio, data.nombre, data.descripcion]
+        [data.nombre, data.descripcion]
       )
       return rows[0]
     } catch (e) {
@@ -53,11 +53,10 @@ export class CategoriaEstudio {
     try {
       const { row } = await pool.query(
         `UPDATE Categoria_estudios SET
-          id_categoria_estudio = $1,
-          nombre = $2,
-          descripcion = $3
-          WHERE id_categoria_estudio = $4 RETURNING *`,
-        [data.id_categoria_estudio, data.nombre, data.descripcion, id]
+          nombre = $1,
+          descripcion = $2
+          WHERE id_categoria_estudio = $3 RETURNING *`,
+        [data.nombre, data.descripcion, id]
       )
       return row[0]
     } catch (e) {

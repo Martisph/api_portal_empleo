@@ -58,16 +58,14 @@ export class Postulacion {
   static async putPostulacion ({ id }, { data }) {
     try {
       const { rows } = await pool.query(
-      `UPDATE Postulaciones SET 
-            id_postulacion = $1, 
-            fk_id_candidato = $2, 
-            fk_id_empresa = $3, 
-            fk_id_anuncio = $4, 
-            estado = $5, 
-            fecha_hora = $6
-            WHERE id_postulacion = $7 RETURNING *`,
+      `UPDATE Postulaciones SET
+            fk_id_candidato = $1,
+            fk_id_empresa = $2,
+            fk_id_anuncio = $3,
+            estado = $4,
+            fecha_hora = $5
+            WHERE id_postulacion = $6 RETURNING *`,
       [
-        data.id_postulacion,
         data.fk_id_candidato,
         data.fk_id_empresa,
         data.fk_id_anuncio,

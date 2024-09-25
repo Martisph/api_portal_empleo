@@ -28,10 +28,9 @@ export class Comentario {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Comentario
-        (id_comentario, fk_id_candidato, fk_id_empresa, descripcion, puntaje, estado)
+        (fk_id_candidato, fk_id_empresa, descripcion, puntaje, estado)
         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
         [
-          data.id_comentario,
           data.fk_id_candidato,
           data.fk_id_empresa,
           data.descripcion,
@@ -62,15 +61,13 @@ export class Comentario {
     try {
       const { rows } = await pool.query(
         `UPDATE Comentarios SET
-          id_comentario = $1, 
-          fk_id_candidato = $2, 
-          fk_id_empresa = $3, 
-          descripcion = $4, 
-          puntaje = $5, 
-          estado = $6,
-        WHERE id_comentario = $7 RETURNING *`,
+          fk_id_candidato = $1,
+          fk_id_empresa = $2,
+          descripcion = $3,
+          puntaje = $4,
+          estado = $5,
+        WHERE id_comentario = $6 RETURNING *`,
         [
-          data.id_comentario,
           data.fk_id_candidato,
           data.fk_id_empresa,
           data.descripcion,

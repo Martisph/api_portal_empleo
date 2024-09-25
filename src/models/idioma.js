@@ -25,8 +25,8 @@ export class Idioma {
   static async postIdioma ({ data }) {
     try {
       const { rows } = await pool.query(
-        'INSERT INTO Idiomas (id_idioma, fk_id_candidato, nombre, nivel) VALUES($1, $2, $3, $4) RETURNING *',
-        [data.id_idioma, data.fk_id_candidato, data.nombre, data.nivel]
+        'INSERT INTO Idiomas (fk_id_candidato, nombre, nivel) VALUES($1, $2, $3, $4) RETURNING *',
+        [data.fk_id_candidato, data.nombre, data.nivel]
       )
       return rows[0]
     } catch (e) {
@@ -50,13 +50,12 @@ export class Idioma {
   static async putIdioma ({ id }, { data }) {
     try {
       const { rows } = await pool.query(
-        `UPDATE Idiomas SET 
-            id_idioma = $1, 
-            fk_id_candidato = $2, 
-            nombre = $3, 
-            nivel = $4
-            WHERE id_idioma = $5 RETURNING *`,
-        [data.id_idioma, data.fk_id_candidato, data.nombre, data.nivel, id]
+        `UPDATE Idiomas SET
+            fk_id_candidato = $1,
+            nombre = $2,
+            nivel = $3
+            WHERE id_idioma = $4 RETURNING *`,
+        [data.fk_id_candidato, data.nombre, data.nivel, id]
       )
       return rows[0]
     } catch (e) {
