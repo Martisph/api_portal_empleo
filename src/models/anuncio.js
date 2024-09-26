@@ -84,8 +84,7 @@ export class Anuncio {
           data.edad_maxima,
           data.experiencia_años,
           data.estudio,
-          data.discapacitados,
-          id,
+          data.discapacitados
         ]
       )
       return rows[0]
@@ -100,7 +99,7 @@ export class Anuncio {
         'DELETE FROM Anuncios WHERE id_anuncio = $1 RETURNING *',
         [id]
       )
-      if(rowCount) return true
+      if (rowCount) return true
       return false
     } catch (e) {
       throw new Error(' Internal error ')
@@ -163,7 +162,7 @@ export class Anuncio {
           data.experiencia_años,
           data.estudio,
           data.discapacitados,
-          id,
+          id
         ]
       )
       return rows[0]

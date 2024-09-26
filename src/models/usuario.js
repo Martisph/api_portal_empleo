@@ -48,7 +48,7 @@ export class Usuario {
         'DELETE FROM Usuarios WHERE id_usuario = $1 RETURNING *',
         [id]
       )
-      if(rowCount) return true
+      if (rowCount) return true
       return false
     } catch (e) {
       throw new Error(' Internal error ')
