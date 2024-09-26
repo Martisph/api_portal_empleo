@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Ubicacion } from '../models/ubicacion.js'
+import { validateUbicacion } from '../schemas/ubicacion.js'
 
-/* Seleccionar Ubicaciones */
 export const getUbicaciones = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Ubicacion");
-    return res.json(rows);
-};
-/* Seleccionar un Ubicacion */
+  try {
+    const ubicaciones = await Ubicacion.getAreas()
+    return res.status(200).json(ubicaciones)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getUbicacion = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Ubicacion WHERE idUbicacion =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const ubicacion = await Ubicacion.getArea(req.params)
+    if (!ubicacion) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Ubicacion */
+    return res.status(200).json(ubicacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postUbicacion = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Ubicacion(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Ubicacion */
+  try {
+    const data = validateUbicacion(req.body)
+    const ubicacion = await Ubicacion.postArea(data)
+    return res.status(200).json(ubicacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deleteUbicacion = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Ubicacion WHERE idUbicacion = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const ubicacion = await Ubicacion.deleteArea(req.params)
+    if (ubicacion) {
+      return res.status(200).json({ message: 'Categoria de Ubicacion eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Ubicacion */
+    return res.status(404).json({ message: 'Categoria de Ubicacion no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putUbicacion = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Ubicacion SET nombre = $1 WHERE idUbicacion = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validateUbicacion(req.body)
+    const ubicacion = await Ubicacion.putArea(req.params, data)
+    return res.json(ubicacion)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

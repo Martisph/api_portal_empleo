@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Notificacion } from '../models/notificacion.js'
+import { validateNotificacion } from '../schemas/notificacion.js'
 
-/* Seleccionar Notificaiones */
-export const getNotificaiones = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Notificaion");
-    return res.json(rows);
-};
-/* Seleccionar un Notificaion */
-export const getNotificaion = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Notificaion WHERE idNotificaion =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+export const getNotificacions = async (req, res) => {
+  try {
+    const notificaciones = await Notificacion.getAreas()
+    return res.status(200).json(notificaciones)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const getNotificacion = async (req, res) => {
+  try {
+    const notificacion = await Notificacion.getArea(req.params)
+    if (!notificacion) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Notificaion */
-export const postNotificaion = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Notificaion(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Notificaion */
-export const deleteNotificaion = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Notificaion WHERE idNotificaion = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+    return res.status(200).json(notificacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const postNotificacion = async (req, res) => {
+  try {
+    const data = validateNotificacion(req.body)
+    const notificacion = await Notificacion.postArea(data)
+    return res.status(200).json(notificacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const deleteNotificacion = async (req, res) => {
+  try {
+    const notificacion = await Notificacion.deleteArea(req.params)
+    if (notificacion) {
+      return res.status(200).json({ message: 'Categoria de Notificacion eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Notificaion */
-export const putNotificaion = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Notificaion SET nombre = $1 WHERE idNotificaion = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+    return res.status(404).json({ message: 'Categoria de Notificacion no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const putNotificacion = async (req, res) => {
+  try {
+    const data = validateNotificacion(req.body)
+    const notificacion = await Notificacion.putArea(req.params, data)
+    return res.json(notificacion)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

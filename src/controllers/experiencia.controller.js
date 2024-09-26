@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Experiencia } from '../models/experiencia.js'
+import { validateExperiencia } from '../schemas/experiencia.js'
 
-/* Seleccionar Experiencias */
 export const getExperiencias = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Experiencia");
-    return res.json(rows);
-};
-/* Seleccionar un Experiencia */
+  try {
+    const experiencias = await Experiencia.getAreas()
+    return res.status(200).json(experiencias)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getExperiencia = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Experiencia WHERE idExperiencia =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const experiencia = await Experiencia.getArea(req.params)
+    if (!experiencia) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Experiencia */
+    return res.status(200).json(experiencia)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postExperiencia = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Experiencia(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Experiencia */
+  try {
+    const data = validateExperiencia(req.body)
+    const experiencia = await Experiencia.postArea(data)
+    return res.status(200).json(experiencia)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deleteExperiencia = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Experiencia WHERE idExperiencia = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const experiencia = await Experiencia.deleteArea(req.params)
+    if (experiencia) {
+      return res.status(200).json({ message: 'Categoria de Experiencia eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Experiencia */
+    return res.status(404).json({ message: 'Categoria de Experiencia no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putExperiencia = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Experiencia SET nombre = $1 WHERE idExperiencia = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validateExperiencia(req.body)
+    const experiencia = await Experiencia.putArea(req.params, data)
+    return res.json(experiencia)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

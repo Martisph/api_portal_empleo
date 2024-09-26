@@ -8,3 +8,11 @@ const notificacionSchema = z.object({
     estado_publicacion: z.string(),
     fecha_hora: z.datetimeRegex(),
 });
+
+export function validateNotificacion(object){
+    return notificacionSchema.safeParse(object)
+}
+
+export function validatePartialNotificacion(object){
+    return notificacionSchema.partial().safeParse(object)
+}

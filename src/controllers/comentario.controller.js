@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Comentario } from '../models/comentario.js'
+import { validateComentario } from '../schemas/comentario.js'
 
-/* Seleccionar Comentarios */
 export const getComentarios = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Comentario");
-    return res.json(rows);
-};
-/* Seleccionar un Comentario */
+  try {
+    const comentarios = await Comentario.getAreas()
+    return res.status(200).json(comentarios)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getComentario = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Comentario WHERE idComentario =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const comentario = await Comentario.getArea(req.params)
+    if (!comentario) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Comentario */
+    return res.status(200).json(comentario)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postComentario = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Comentario(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Comentario */
+  try {
+    const data = validateComentario(req.body)
+    const comentario = await Comentario.postArea(data)
+    return res.status(200).json(comentario)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deleteComentario = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Comentario WHERE idComentario = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const comentario = await Comentario.deleteArea(req.params)
+    if (comentario) {
+      return res.status(200).json({ message: 'Categoria de estudio eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Comentario */
+    return res.status(404).json({ message: 'Categoria de estudio no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putComentario = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Comentario SET nombre = $1 WHERE idComentario = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validateComentario(req.body)
+    const comentario = await Comentario.putArea(req.params, data)
+    return res.json(comentario)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

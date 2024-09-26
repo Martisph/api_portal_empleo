@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { CategoriaEstudio } from '../models/categoria_estudio.js'
+import { validateCategoriaEstudio } from '../schemas/categoria_estudio.js'
 
-/* Seleccionar CategoriaEstudios */
 export const getCategoriaEstudios = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM CategoriaEstudios");
-    return res.json(rows);
-};
-/* Seleccionar un CategoriaEstudios */
+  try {
+    const categoriaEstudios = await CategoriaEstudio.getAreas()
+    return res.status(200).json(categoriaEstudios)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getCategoriaEstudio = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM CategoriaEstudios WHERE idCategoriaEstudios =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const categoriaEstudio = await CategoriaEstudio.getArea(req.params)
+    if (!categoriaEstudio) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar CategoriaEstudios */
-export const postCategoriaEstudios = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO CategoriaEstudios(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un CategoriaEstudios */
-export const deleteCategoriaEstudios = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM CategoriaEstudios WHERE idCategoriaEstudios = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+    return res.status(200).json(categoriaEstudio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const postCategoriaEstudio = async (req, res) => {
+  try {
+    const data = validateCategoriaEstudio(req.body)
+    const categoriaEstudio = await CategoriaEstudio.postArea(data)
+    return res.status(200).json(categoriaEstudio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const deleteCategoriaEstudio = async (req, res) => {
+  try {
+    const categoriaEstudio = await CategoriaEstudio.deleteArea(req.params)
+    if (categoriaEstudio) {
+      return res.status(200).json({ message: 'Categoria de estudio eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un CategoriaEstudios */
-export const putCategoriaEstudios = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE CategoriaEstudios SET nombre = $1 WHERE idCategoriaEstudios = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+    return res.status(404).json({ message: 'Categoria de estudio no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const putCategoriaEstudio = async (req, res) => {
+  try {
+    const data = validateCategoriaEstudio(req.body)
+    const categoriaEstudio = await CategoriaEstudio.putArea(req.params, data)
+    return res.json(categoriaEstudio)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

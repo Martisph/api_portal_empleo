@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Anuncio } from '../models/anuncio.js'
+import { validateAnuncio } from '../schemas/anuncio.js'
 
-/* Seleccionar Anuncios */
 export const getAnuncios = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Anuncio");
-    return res.json(rows);
-};
-/* Seleccionar un Anuncio */
+  try {
+    const anuncios = await Anuncio.getAreas()
+    return res.status(200).json(anuncios)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getAnuncio = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Anuncio WHERE idAnuncio =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const anuncio = await Anuncio.getArea(req.params)
+    if (!anuncio) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Anuncio */
+    return res.status(200).json(anuncio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postAnuncio = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Anuncio(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Anuncio */
+  try {
+    const data = validateAnuncio(req.body)
+    const anuncio = await Anuncio.postArea(data)
+    return res.status(200).json(anuncio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deleteAnuncio = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Anuncio WHERE idAnuncio = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const anuncio = await Anuncio.deleteArea(req.params)
+    if (anuncio) {
+      return res.status(200).json({ message: 'Categoria de Anuncio eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Anuncio */
+    return res.status(404).json({ message: 'Categoria de Anuncio no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putAnuncio = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Anuncio SET nombre = $1 WHERE idAnuncio = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validateAnuncio(req.body)
+    const anuncio = await Anuncio.putArea(req.params, data)
+    return res.json(anuncio)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

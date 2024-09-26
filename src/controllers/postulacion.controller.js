@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Postulacion } from '../models/postulacion.js'
+import { validatePostulacion } from '../schemas/postulacion.js'
 
-/* Seleccionar Postulaciones */
 export const getPostulaciones = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Postulacion");
-    return res.json(rows);
-};
-/* Seleccionar un Postulacion */
+  try {
+    const postulaciones = await Postulacion.getAreas()
+    return res.status(200).json(postulaciones)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getPostulacion = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Postulacion WHERE idPostulacion =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const postulacion = await Postulacion.getArea(req.params)
+    if (!postulacion) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Postulacion */
+    return res.status(200).json(postulacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postPostulacion = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Postulacion(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Postulacion */
+  try {
+    const data = validatePostulacion(req.body)
+    const postulacion = await Postulacion.postArea(data)
+    return res.status(200).json(postulacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deletePostulacion = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Postulacion WHERE idPostulacion = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const postulacion = await Postulacion.deleteArea(req.params)
+    if (postulacion) {
+      return res.status(200).json({ message: 'Categoria de Postulacion eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Postulacion */
+    return res.status(404).json({ message: 'Categoria de Postulacion no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putPostulacion = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Postulacion SET nombre = $1 WHERE idPostulacion = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validatePostulacion(req.body)
+    const postulacion = await Postulacion.putArea(req.params, data)
+    return res.json(postulacion)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}

@@ -1,49 +1,55 @@
-import { pool } from "../database/db.js";
+import { Departamento } from '../models/departamento.js'
+import { validateDepartamento } from '../schemas/departamento.js'
 
-/* Seleccionar Departamentos */
 export const getDepartamentos = async (req, res) => {
-    const { rows } = await pool.query("SELECT * FROM Departamento");
-    return res.json(rows);
-};
-/* Seleccionar un Departamento */
+  try {
+    const departamentos = await Departamento.getAreas()
+    return res.status(200).json(departamentos)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getDepartamento = async (req, res) => {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM Departamento WHERE idDepartamento =$1", [
-        id,
-    ]);
-    if (rows.length == 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const departamento = await Departamento.getArea(req.params)
+    if (!departamento) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
     }
-    return res.json(rows[0]);
-};
-/* Insertar Departamento */
+    return res.status(200).json(departamento)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postDepartamento = async (req, res) => {
-    const data = req.body;
-    const { rows } = await pool.query(
-        "INSERT INTO Departamento(nombre) VALUES($1) RETURNING *",
-        [data.nombre]
-    );
-    return res.json(rows[0]);
-};
-/* Eliminar un Departamento */
+  try {
+    const data = validateDepartamento(req.body)
+    const departamento = await Departamento.postArea(data)
+    return res.status(200).json(departamento)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const deleteDepartamento = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query(
-        "DELETE FROM Departamento WHERE idDepartamento = $1 RETURNING *",
-        [id]
-    );
-    if (rowCount === 0) {
-        return res.status(404).json({ message: "User no encontrado" });
+  try {
+    const departamento = await Departamento.deleteArea(req.params)
+    if (departamento) {
+      return res.status(200).json({ message: 'Categoria de estudio eliminado' })
     }
-    return res.sendStatus(204);
-};
-/* Editar un Departamento */
+    return res.status(404).json({ message: 'Categoria de estudio no encontrado' })
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const putDepartamento = async (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const { rows } = await pool.query(
-        "UPDATE Departamento SET nombre = $1 WHERE idDepartamento = $2 RETURNING *",
-        [data.nombre, id]
-    );
-    return res.json(rows[0]);
-};
+  try {
+    const data = validateDepartamento(req.body)
+    const departamento = await Departamento.putArea(req.params, data)
+    return res.json(departamento)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}
