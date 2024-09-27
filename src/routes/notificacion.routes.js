@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteNotificacion, getNotificacion, getNotificaciones, postNotificacion, putNotificacion } from '../controllers/notificacion.controller.js'
 
-export const routerNotificaciones = Router();
+export const routerNotificaciones = Router()
 
-routerNotificaciones.get("/", (req, res) => {});
+routerNotificaciones.get('/', getNotificaciones)
 
-routerNotificaciones.get("/:id", (req, res) => {});
+routerNotificaciones.get('/:id', getNotificacion)
 
-routerNotificaciones.post("/", (req, res) => {});
+routerNotificaciones.post('/', postNotificacion)
 
-routerNotificaciones.delete("/:id", (req, res) => {});
+routerNotificaciones.delete('/:id', deleteNotificacion)
 
-routerNotificaciones.put("/:id", (req, res) => {});
+routerNotificaciones.put('/:id', putNotificacion)

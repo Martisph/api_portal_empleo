@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteIdioma, getIdioma, getIdiomas, postIdioma, putIdioma } from '../controllers/idioma.controller.js'
 
-export const routerIdiomas = Router();
+export const routerIdiomas = Router()
 
-routerIdiomas.get("/", (req, res) => {});
+routerIdiomas.get('/', getIdiomas)
 
-routerIdiomas.get("/:id", (req, res) => {});
+routerIdiomas.get('/:id', getIdioma)
 
-routerIdiomas.post("/", (req, res) => {});
+routerIdiomas.post('/', postIdioma)
 
-routerIdiomas.delete("/:id", (req, res) => {});
+routerIdiomas.delete('/:id', deleteIdioma)
 
-routerIdiomas.put("/:id", (req, res) => {});
+routerIdiomas.put('/:id', putIdioma)

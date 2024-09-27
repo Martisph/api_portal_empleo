@@ -35,10 +35,10 @@ export const postArea = async (req, res) => {
 export const deleteArea = async (req, res) => {
   try {
     const area = await Area.deleteArea(req.params)
-    if (area) return res.status(200).json({ message: 'pais eliminado' })
-    return res.status(404).json({ message: 'Pais no encontrado' })
+    if (area) return res.status(200).json({ message: ' Area eliminado ' })
+    return res.status(404).json({ message: ' Area no eliminado ' })
   } catch (e) {
-    return res.status(500).json({ message: 'internal error' })
+    return res.status(500).json({ message: e.message })
   }
 }
 

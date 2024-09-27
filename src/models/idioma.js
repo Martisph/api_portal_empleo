@@ -6,7 +6,7 @@ export class Idioma {
       const { rows } = await pool.query('SELECT * FROM Idiomas')
       return rows
     } catch (e) {
-      throw new Error(' Interanl error ')
+      throw new Error(' Interanl error ' + e.message)
     }
   }
 
@@ -18,19 +18,19 @@ export class Idioma {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Interanl error ')
+      throw new Error(' Interanl error ' + e.message)
     }
   }
 
   static async postIdioma ({ data }) {
     try {
       const { rows } = await pool.query(
-        'INSERT INTO Idiomas (fk_id_candidato, nombre, nivel) VALUES($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO Idiomas (fk_id_candidato, nombre, nivel) VALUES($1, $2, $3) RETURNING *',
         [data.fk_id_candidato, data.nombre, data.nivel]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Interanl error ')
+      throw new Error(' Interanl error ' + e.message)
     }
   }
 
@@ -43,7 +43,7 @@ export class Idioma {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Interanl error ')
+      throw new Error(' Interanl error ' + e.message)
     }
   }
 
@@ -59,7 +59,7 @@ export class Idioma {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Interanl error ')
+      throw new Error(' Interanl error ' + e.message)
     }
   }
 }

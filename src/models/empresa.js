@@ -8,7 +8,7 @@ export class Empresa {
       )
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -20,7 +20,7 @@ export class Empresa {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -46,7 +46,7 @@ export class Empresa {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -59,7 +59,7 @@ export class Empresa {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -96,7 +96,7 @@ export class Empresa {
       )
       return rows(0)
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

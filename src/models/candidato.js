@@ -27,7 +27,7 @@ export class Candidato {
       const { rows } = await pool.query(
         `INSERT INTO Candidatos
               (fk_id_usuario, fk_id_area, apellido, genero, estado_civil, fecha_nacimiento, direccion, telefono, linkedin)
-              VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+              VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [
           data.fk_id_usuario,
           data.fk_id_area,

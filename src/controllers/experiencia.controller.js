@@ -3,7 +3,7 @@ import { validateExperiencia } from '../schemas/experiencia.js'
 
 export const getExperiencias = async (req, res) => {
   try {
-    const experiencias = await Experiencia.getAreas()
+    const experiencias = await Experiencia.getExperiencias()
     return res.status(200).json(experiencias)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -12,9 +12,9 @@ export const getExperiencias = async (req, res) => {
 
 export const getExperiencia = async (req, res) => {
   try {
-    const experiencia = await Experiencia.getArea(req.params)
+    const experiencia = await Experiencia.getExperiencia(req.params)
     if (!experiencia) {
-      return res.status(404).json({ message: ' Dato no encontrado ' })
+      return res.status(404).json({ message: ' Experiencia laboral no encontrado ' })
     }
     return res.status(200).json(experiencia)
   } catch (e) {
@@ -25,7 +25,7 @@ export const getExperiencia = async (req, res) => {
 export const postExperiencia = async (req, res) => {
   try {
     const data = validateExperiencia(req.body)
-    const experiencia = await Experiencia.postArea(data)
+    const experiencia = await Experiencia.postExperiencia(data)
     return res.status(200).json(experiencia)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -34,11 +34,11 @@ export const postExperiencia = async (req, res) => {
 
 export const deleteExperiencia = async (req, res) => {
   try {
-    const experiencia = await Experiencia.deleteArea(req.params)
+    const experiencia = await Experiencia.deleteExperiencia(req.params)
     if (experiencia) {
-      return res.status(200).json({ message: 'Categoria de Experiencia eliminado' })
+      return res.status(200).json({ message: ' Experiencia laboral eliminado ' })
     }
-    return res.status(404).json({ message: 'Categoria de Experiencia no encontrado' })
+    return res.status(404).json({ message: ' Experiencia laboral no eliminado ' })
   } catch (e) {
     return res.status(500).json({ message: e.message })
   }
@@ -47,7 +47,7 @@ export const deleteExperiencia = async (req, res) => {
 export const putExperiencia = async (req, res) => {
   try {
     const data = validateExperiencia(req.body)
-    const experiencia = await Experiencia.putArea(req.params, data)
+    const experiencia = await Experiencia.putExperiencia(req.params, data)
     return res.json(experiencia)
   } catch (e) {
     res.status(500).json({ message: e.message })

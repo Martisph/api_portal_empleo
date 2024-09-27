@@ -5,7 +5,7 @@ export class Pais {
       const { rows } = await pool.query('SELECT id_pais, nombre FROM Paises')
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -17,7 +17,7 @@ export class Pais {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -29,7 +29,7 @@ export class Pais {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -42,7 +42,7 @@ export class Pais {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -54,7 +54,7 @@ export class Pais {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

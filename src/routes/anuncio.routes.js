@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { getAnuncio, getAnuncios, postAnuncio, deleteAnuncio, putAnuncio } from '../controllers/anuncio.controller.js'
 
-export const routerAnuncios = Router();
+export const routerAnuncios = Router()
 
-routerAnuncios.get("/", (req, res) => {});
+routerAnuncios.get('/', getAnuncios)
 
-routerAnuncios.get("/:id", (req, res) => {});
+routerAnuncios.get('/:id', getAnuncio)
 
-routerAnuncios.post("/", (req, res) => {});
+routerAnuncios.post('/', postAnuncio)
 
-routerAnuncios.delete("/:id", (req, res) => {});
+routerAnuncios.delete('/:id', deleteAnuncio)
 
-routerAnuncios.put("/:id", (req, res) => {});
+routerAnuncios.put('/:id', putAnuncio)

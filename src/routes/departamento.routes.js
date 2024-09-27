@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteDepartamento, getDepartamento, getDepartamentos, postDepartamento, putDepartamento } from '../controllers/departamento.controller.js'
 
-export const routerDepartamentos = Router();
+export const routerDepartamentos = Router()
 
-routerDepartamentos.get("/", (req, res) => {});
+routerDepartamentos.get('/', getDepartamentos)
 
-routerDepartamentos.get("/:id", (req, res) => {});
+routerDepartamentos.get('/:id', getDepartamento)
 
-routerDepartamentos.post("/", (req, res) => {});
+routerDepartamentos.post('/', postDepartamento)
 
-routerDepartamentos.delete("/:id", (req, res) => {});
+routerDepartamentos.delete('/:id', deleteDepartamento)
 
-routerDepartamentos.put("/:id", (req, res) => {});
+routerDepartamentos.put('/:id', putDepartamento)

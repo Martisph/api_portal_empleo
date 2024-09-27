@@ -1,21 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express'
 import {
-    deletePais,
-    getPais,
-    getPaises,
-    postPais,
-    putPais,
-} from "../controllers/pais.controller.js";
+  deletePais,
+  getPais,
+  getPaises,
+  postPais,
+  putPais
+} from '../controllers/pais.controller.js'
 
-export const routerPaises = Router();
+export const routerPaises = Router()
 
-routerPaises.get("/", getPaises );
+routerPaises.get('/', getPaises)
 
-routerPaises.get("/:id", getPais);
+routerPaises.get('/:id', getPais)
 
-routerPaises.post("/", postPais);
+routerPaises.post('/', postPais)
 
-routerPaises.delete("/:id", deletePais);
+routerPaises.delete('/:id', deletePais)
 
-routerPaises.put("/:id", putPais);
-
+routerPaises.put('/:id', putPais)

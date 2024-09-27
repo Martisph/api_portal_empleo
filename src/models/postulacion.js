@@ -6,7 +6,7 @@ export class Postulacion {
       const { rows } = await pool.query('SELECT * FROM Postulaciones')
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -18,27 +18,27 @@ export class Postulacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async postPostulacion ({ data }) {
+    console.log(data)
     try {
       const { rows } = await pool.query(
       `INSERT INTO Postulaciones
-            (fk_id_candidato, fk_id_empresa, fk_id_anuncio, estado, fecha_hora)
-            VALUES($1, $2, $3, $4, $5) RETURNING *`,
+            (fk_id_candidato, fk_id_empresa, fk_id_anuncio, estado)
+            VALUES($1, $2, $3, $4) RETURNING *`,
       [
         data.fk_id_candidato,
         data.fk_id_empresa,
         data.fk_id_anuncio,
-        data.estado,
-        data.fecha_hora
+        data.estado
       ]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -51,7 +51,7 @@ export class Postulacion {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -76,7 +76,7 @@ export class Postulacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

@@ -1,4 +1,4 @@
-import { pool } from '../database/db'
+import { pool } from '../database/db.js'
 
 export class Anuncio {
   static async getAnuncios () {
@@ -6,7 +6,7 @@ export class Anuncio {
       const { rows } = await pool.query('SELECT * FROM Anuncios')
       return rows
     } catch (e) {
-      throw new Error('Internal error')
+      throw new Error('Internal error' + e.message)
     }
   }
 
@@ -39,7 +39,6 @@ export class Anuncio {
         beneficios,
         direccion,
         fecha_entrevista,
-        fecha_publicacion,
         tipo_contrato,
         modalidad,
         jornada_laboral,
@@ -48,16 +47,14 @@ export class Anuncio {
         salario_minimo,
         edad_minima,
         edad_maxima,
-        experiencia_años,
+        experiencia_anios,
         estudio,
-        discapacitados,
-          ) VALUES(
+        discapacitados) VALUES(
           $1, $2, $3, $4, $5,
           $6, $7, $8, $9, $10,
           $11, $12, $13, $14, $15,
           $16, $17, $18, $19, $20,
-          $21, $22, $23, $24, $25
-          ) RETURNING *`,
+          $21, $22, $23, $24) RETURNING *`,
         [
           data.fk_id_empresa,
           data.fk_id_ubicacion,
@@ -72,24 +69,22 @@ export class Anuncio {
           data.beneficios,
           data.direccion,
           data.fecha_entrevista,
-          data.fecha_publicacion,
           data.tipo_contrato,
           data.modalidad,
           data.jornada_laboral,
           data.horario_trabajo,
           data.cantidad_vacantes,
           data.salario_minimo,
-          data.salario,
           data.edad_minima,
           data.edad_maxima,
-          data.experiencia_años,
+          data.experiencia_anios,
           data.estudio,
           data.discapacitados
         ]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -102,7 +97,7 @@ export class Anuncio {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -167,7 +162,7 @@ export class Anuncio {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

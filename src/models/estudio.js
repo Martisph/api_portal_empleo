@@ -4,30 +4,30 @@ export class Estudio {
   static async getEstudios () {
     try {
       const { rows } = await pool.query(
-        'SELECT * FORM Estudios'
+        'SELECT * FROM Estudios'
       )
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async getEstudio ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Estudios WHERE id_empresa = $1',
+        'SELECT * FROM Estudios WHERE id_estudio = $1',
         [id]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async postEstudio ({ data }) {
     try {
       const { rows } = await pool.query(
-        `INSET INTO Estudios
+        `INSERT INTO Estudios
           (fk_id_categoria_estudio, fk_id_candidato, titulo, descripcion, estado)
         VALUES($1, $2, $3, $4, $5) RETURNING *`,
         [
@@ -40,7 +40,7 @@ export class Estudio {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -53,7 +53,7 @@ export class Estudio {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -78,7 +78,7 @@ export class Estudio {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

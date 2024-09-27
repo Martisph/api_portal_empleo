@@ -8,28 +8,28 @@ export class Comentario {
       )
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async getComentario ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Comentario WHERE id_comentario = $1',
+        'SELECT * FROM Comentarios WHERE id_comentario = $1',
         [id]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async postComentario ({ data }) {
     try {
       const { rows } = await pool.query(
-        `INSERT INTO Comentario
+        `INSERT INTO Comentarios
         (fk_id_candidato, fk_id_empresa, descripcion, puntaje, estado)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
         [
           data.fk_id_candidato,
           data.fk_id_empresa,
@@ -40,20 +40,20 @@ export class Comentario {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async deleteComentario ({ id }) {
     try {
       const { rowCount } = await pool.query(
-        'DELETE FROM Comentario WHERE id_comentario = $1 RETURNING *',
+        'DELETE FROM Comentarios WHERE id_comentario = $1 RETURNING *',
         [id]
       )
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -78,7 +78,7 @@ export class Comentario {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

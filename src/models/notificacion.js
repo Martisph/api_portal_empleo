@@ -6,7 +6,7 @@ export class Notificacion {
       const { rows } = await pool.query('SELECT * FROM Notificaciones')
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -18,7 +18,7 @@ export class Notificacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -26,20 +26,19 @@ export class Notificacion {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Notificaciones
-            (fk_id_empresa, fk_id_candidato, titulo, descripcion, estado_publicacion, fecha_hora)
-            VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+            (fk_id_empresa, fk_id_candidato, titulo, descripcion, estado_publicacion)
+            VALUES($1, $2, $3, $4, $5) RETURNING *`,
         [
           data.fk_id_empresa,
           data.fk_id_candidato,
           data.titulo,
           data.descripcion,
-          data.estado_publicacion,
-          data.fecha_hora
+          data.estado_publicacion
         ]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -52,7 +51,7 @@ export class Notificacion {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -79,7 +78,7 @@ export class Notificacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

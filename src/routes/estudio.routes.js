@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteEstudio, getEstudio, getEstudios, postEstudio, putEstudio } from '../controllers/estudio.controller.js'
 
-export const routerEstudios = Router();
+export const routerEstudios = Router()
 
-routerEstudios.get("/", (req, res) => {});
+routerEstudios.get('/', getEstudios)
 
-routerEstudios.get("/:id", (req, res) => {});
+routerEstudios.get('/:id', getEstudio)
 
-routerEstudios.post("/", (req, res) => {});
+routerEstudios.post('/', postEstudio)
 
-routerEstudios.delete("/:id", (req, res) => {});
+routerEstudios.delete('/:id', deleteEstudio)
 
-routerEstudios.put("/:id", (req, res) => {});
+routerEstudios.put('/:id', putEstudio)

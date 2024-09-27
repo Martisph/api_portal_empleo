@@ -1,14 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express'
+import {
+  getUbicacion,
+  getUbicaciones,
+  postUbicacion,
+  deleteUbicacion,
+  putUbicacion
+} from '../controllers/ubicacion.controller.js'
 
-export const routerUbicaciones = Router();
+export const routerUbicaciones = Router()
 
-routerUbicaciones.get("/", (req, res) => {});
+routerUbicaciones.get('/', getUbicaciones)
 
-routerUbicaciones.get("/:id", (req, res) => {});
+routerUbicaciones.get('/:id', getUbicacion)
 
-routerUbicaciones.post("/", (req, res) => {});
+routerUbicaciones.post('/', postUbicacion)
 
-routerUbicaciones.delete("/:id", (req, res) => {});
+routerUbicaciones.delete('/:id', deleteUbicacion)
 
-routerUbicaciones.put("/:id", (req, res) => {});
-
+routerUbicaciones.put('/:id', putUbicacion)

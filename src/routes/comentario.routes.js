@@ -1,13 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express'
+import {
+  deleteComentario,
+  getComentarios,
+  getComentario,
+  postComentario,
+  putComentario
+} from '../controllers/comentario.controller.js'
 
-export const routerComentarios  = Router();
+export const routerComentarios = Router()
 
-routerComentarios.get("/", (req, res) => {});
+routerComentarios.get('/', getComentarios)
 
-routerComentarios.get("/:id", (req, res) => {});
+routerComentarios.get('/:id', getComentario)
 
-routerComentarios.post("/", (req, res) => {});
+routerComentarios.post('/', postComentario)
 
-routerComentarios.delete("/:id", (req, res) => {});
+routerComentarios.delete('/:id', deleteComentario)
 
-routerComentarios.put("/:id", (req, res) => {});
+routerComentarios.put('/:id', putComentario)

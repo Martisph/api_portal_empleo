@@ -5,7 +5,7 @@ export class Ubicacion {
       const { rows } = await pool.query('SELECT * FROM Ubicaciones')
       return rows
     } catch (e) {
-      throw new Error(' Internal error')
+      throw new Error(' Internal error' + e.message)
     }
   }
 
@@ -17,19 +17,19 @@ export class Ubicacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal errord')
+      throw new Error(' Internal errord' + e.message)
     }
   }
 
   static async postUbicacion ({ data }) {
     try {
       const { rows } = await pool.query(
-        'INSERT INTO Ubicaciones (fk_id_departamento, nombre) VALUES($1, $2, $3) RETURNING *',
+        'INSERT INTO Ubicaciones (fk_id_departamento, nombre) VALUES($1, $2) RETURNING *',
         [data.fk_id_departamento, data.nombre]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal errord')
+      throw new Error(' Internal errord' + e.message)
     }
   }
 
@@ -42,7 +42,7 @@ export class Ubicacion {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal errord')
+      throw new Error(' Internal errord' + e.message)
     }
   }
 
@@ -54,7 +54,7 @@ export class Ubicacion {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal errord')
+      throw new Error(' Internal errord' + e.message)
     }
   }
 }
