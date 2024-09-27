@@ -64,7 +64,7 @@ export class Notificacion {
           titulo = $3,
           descripcion = $4,
           estado_publicacion = $5,
-          fecha_hora = $6,
+          fecha_hora = $6
           WHERE id_notificacion = $7 RETURNING *`,
         [
           data.fk_id_empresa,

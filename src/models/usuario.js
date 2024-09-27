@@ -59,20 +59,18 @@ export class Usuario {
     try {
       const { rows } = await pool.query(
         `UPDATE Usuarios SET 
-              fk_id_ubicacion = $1
-              nombre = $2
-              email = $3
-              contrasena = $4
+              fk_id_ubicacion = $1,
+              nombre = $2,
+              email = $3,
+              contrasena = $4,
               rol = $5
-              fecha_creacion = $6
-              WHERE id_usuario = $7 RETURNING *`,
+              WHERE id_usuario = $6 RETURNING *`,
         [
           data.fk_id_ubicacion,
           data.nombre,
           data.email,
           data.contrasena,
           data.rol,
-          data.fecha_creacion,
           id
         ]
       )

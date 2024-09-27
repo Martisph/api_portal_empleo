@@ -49,7 +49,6 @@ export class Area {
 
   static async putArea ({ id }, { data }) {
     try {
-      console.log(data)
       const { rows } = await pool.query(
         'UPDATE Areas SET nombre = $1, descripcion = $2 WHERE id_area = $3 RETURNING *',
         [data.nombre, data.descripcion, id]

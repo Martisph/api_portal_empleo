@@ -65,7 +65,7 @@ export class Comentario {
           fk_id_empresa = $2,
           descripcion = $3,
           puntaje = $4,
-          estado = $5,
+          estado = $5
         WHERE id_comentario = $6 RETURNING *`,
         [
           data.fk_id_candidato,

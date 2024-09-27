@@ -62,15 +62,13 @@ export class Postulacion {
             fk_id_candidato = $1,
             fk_id_empresa = $2,
             fk_id_anuncio = $3,
-            estado = $4,
-            fecha_hora = $5
-            WHERE id_postulacion = $6 RETURNING *`,
+            estado = $4
+            WHERE id_postulacion = $5 RETURNING *`,
       [
         data.fk_id_candidato,
         data.fk_id_empresa,
         data.fk_id_anuncio,
         data.estado,
-        data.fecha_hora,
         id
       ]
       )

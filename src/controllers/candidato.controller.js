@@ -34,7 +34,7 @@ export const postCandidato = async (req, res) => {
 
 export const deleteCandidato = async (req, res) => {
   try {
-    const candidato = Candidato.deleteCandidato(req.params)
+    const candidato = await Candidato.deleteCandidato(req.params)
     if (candidato) return res.status(200).json({ message: ' Candidato eliminado ' })
     return res.status(404).json({ message: ' Candidato no eliminado ' })
   } catch (e) {
@@ -45,7 +45,7 @@ export const deleteCandidato = async (req, res) => {
 export const putCandidato = async (req, res) => {
   try {
     const data = validateCandidato(req.body)
-    const candidato = Candidato.putCandidato(req.params, data)
+    const candidato = await Candidato.putCandidato(req.params, data)
     return res.status(200).json(candidato)
   } catch (e) {
     return res.status(500).json({ message: e.message })

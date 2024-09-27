@@ -53,7 +53,7 @@ export class Empresa {
   static async deleteEmpresa ({ id }) {
     try {
       const { rowCount } = await pool.query(
-        'DELETE FROM Departamentos WHERE id_departamento = $1 RETURNING *',
+        'DELETE FROM Empresas WHERE id_empresa = $1 RETURNING *',
         [id]
       )
       if (rowCount) return true
@@ -94,7 +94,7 @@ export class Empresa {
           id
         ]
       )
-      return rows(0)
+      return rows[0]
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
     }

@@ -39,7 +39,7 @@ export class CategoriaEstudio {
   static async deleteCategoriaEstudio ({ id }) {
     try {
       const { rowCount } = await pool.query(
-        'DELETE FROM Categoria_estudio WHERE id_categoria_estudio = $1 RETURNING *',
+        'DELETE FROM Categoria_estudios WHERE id_categoria_estudio = $1 RETURNING *',
         [id]
       )
       if (rowCount) return true
@@ -51,14 +51,14 @@ export class CategoriaEstudio {
 
   static async putCategoriaEstudio ({ id }, { data }) {
     try {
-      const { row } = await pool.query(
+      const { rows } = await pool.query(
         `UPDATE Categoria_estudios SET
           nombre = $1,
           descripcion = $2
           WHERE id_categoria_estudio = $3 RETURNING *`,
         [data.nombre, data.descripcion, id]
       )
-      return row[0]
+      return rows[0]
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
     }
