@@ -1,14 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deletePostulacion, getPostulacion, getPostulaciones, postPostulacion, putPostulacion } from '../controllers/postulacion.controller.js'
 
-export const routerPostulaciones = Router();
+export const routerPostulaciones = Router()
 
-routerPostulaciones.get("/", (req, res) => {});
+routerPostulaciones.get('/', getPostulaciones)
 
-routerPostulaciones.get("/:id", (req, res) => {});
+routerPostulaciones.get('/:id', getPostulacion)
 
-routerPostulaciones.post("/", (req, res) => {});
+routerPostulaciones.post('/', postPostulacion)
 
-routerPostulaciones.delete("/:id", (req, res) => {});
+routerPostulaciones.delete('/:id', deletePostulacion)
 
-routerPostulaciones.put("/:id", (req, res) => {});
-
+routerPostulaciones.put('/:id', putPostulacion)

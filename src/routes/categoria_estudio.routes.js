@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { getCategoriaEstudio, getCategoriaEstudios, postCategoriaEstudio, deleteCategoriaEstudio, putCategoriaEstudio } from '../controllers/categoria_estudio.controller.js'
 
-export const routerCategoriaStudios = Router();
+export const routerCategoriaStudios = Router()
 
-routerCategoriaStudios.get("/", (req, res) => {});
+routerCategoriaStudios.get('/', getCategoriaEstudios)
 
-routerCategoriaStudios.get("/:id", (req, res) => {});
+routerCategoriaStudios.get('/:id', getCategoriaEstudio)
 
-routerCategoriaStudios.post("/", (req, res) => {});
+routerCategoriaStudios.post('/', postCategoriaEstudio)
 
-routerCategoriaStudios.delete("/:id", (req, res) => {});
+routerCategoriaStudios.delete('/:id', deleteCategoriaEstudio)
 
-routerCategoriaStudios.put("/:id", (req, res) => {});
+routerCategoriaStudios.put('/:id', putCategoriaEstudio)

@@ -1,13 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { deleteExperiencia, getExperiencia, getExperiencias, postExperiencia, putExperiencia } from '../controllers/experiencia.controller.js'
 
-export const routerExperiencias = Router();
+export const routerExperiencias = Router()
 
-routerExperiencias.get("/", (req, res) => {});
+routerExperiencias.get('/', getExperiencias)
 
-routerExperiencias.get("/:id", (req, res) => {});
+routerExperiencias.get('/:id', getExperiencia)
 
-routerExperiencias.post("/", (req, res) => {});
+routerExperiencias.post('/', postExperiencia)
 
-routerExperiencias.delete("/:id", (req, res) => {});
+routerExperiencias.delete('/:id', deleteExperiencia)
 
-routerExperiencias.put("/:id", (req, res) => {});
+routerExperiencias.put('/:id', putExperiencia)

@@ -6,7 +6,7 @@ export class Usuario {
       const { rows } = await pool.query('SELECT * FROM Usuarios')
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -18,7 +18,7 @@ export class Usuario {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -38,7 +38,7 @@ export class Usuario {
       )
       return rows[0]
     } catch (e) {
-      return { message: 'error en el modelo' }
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -51,7 +51,7 @@ export class Usuario {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -78,7 +78,7 @@ export class Usuario {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

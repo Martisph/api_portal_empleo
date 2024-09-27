@@ -45,6 +45,7 @@ linkedin
 
 #Empresas
 id_empresa
+fk_id_usuario
 nombre
 razon_social
 descripcion
@@ -112,7 +113,7 @@ cantidad_vacantes
 salario_minimo
 edad_minima
 edad_maxima
-experiencia_años
+experiencia_anios
 estudio
 discapacitados
 

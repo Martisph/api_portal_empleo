@@ -3,7 +3,7 @@ import { validateAnuncio } from '../schemas/anuncio.js'
 
 export const getAnuncios = async (req, res) => {
   try {
-    const anuncios = await Anuncio.getAreas()
+    const anuncios = await Anuncio.getAnuncios()
     return res.status(200).json(anuncios)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -12,9 +12,9 @@ export const getAnuncios = async (req, res) => {
 
 export const getAnuncio = async (req, res) => {
   try {
-    const anuncio = await Anuncio.getArea(req.params)
+    const anuncio = await Anuncio.getAnuncio(req.params)
     if (!anuncio) {
-      return res.status(404).json({ message: ' Dato no encontrado ' })
+      return res.status(404).json({ message: ' Anuncio no encontrado ' })
     }
     return res.status(200).json(anuncio)
   } catch (e) {
@@ -25,7 +25,7 @@ export const getAnuncio = async (req, res) => {
 export const postAnuncio = async (req, res) => {
   try {
     const data = validateAnuncio(req.body)
-    const anuncio = await Anuncio.postArea(data)
+    const anuncio = await Anuncio.postAnuncio(data)
     return res.status(200).json(anuncio)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -34,11 +34,11 @@ export const postAnuncio = async (req, res) => {
 
 export const deleteAnuncio = async (req, res) => {
   try {
-    const anuncio = await Anuncio.deleteArea(req.params)
+    const anuncio = await Anuncio.deleteAnuncio(req.params)
     if (anuncio) {
-      return res.status(200).json({ message: 'Categoria de Anuncio eliminado' })
+      return res.status(200).json({ message: ' Anuncio eliminado ' })
     }
-    return res.status(404).json({ message: 'Categoria de Anuncio no encontrado' })
+    return res.status(404).json({ message: ' Anuncio no encontrado ' })
   } catch (e) {
     return res.status(500).json({ message: e.message })
   }
@@ -47,7 +47,7 @@ export const deleteAnuncio = async (req, res) => {
 export const putAnuncio = async (req, res) => {
   try {
     const data = validateAnuncio(req.body)
-    const anuncio = await Anuncio.putArea(req.params, data)
+    const anuncio = await Anuncio.putAnuncio(req.params, data)
     return res.json(anuncio)
   } catch (e) {
     res.status(500).json({ message: e.message })

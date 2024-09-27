@@ -6,7 +6,7 @@ export class CategoriaEstudio {
       const { rows } = await pool.query('SELECT * FROM Categoria_Estudios')
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -18,7 +18,7 @@ export class CategoriaEstudio {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal Error ')
+      throw new Error(' Internal Error ' + e.message)
     }
   }
 
@@ -27,12 +27,12 @@ export class CategoriaEstudio {
       const { rows } = await pool.query(
         `INSERT INTO Categoria_Estudios 
       (nombre, descripcion) 
-      VALUES($1, $2, $3) RETURNING *`,
+      VALUES($1, $2) RETURNING *`,
         [data.nombre, data.descripcion]
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -44,8 +44,8 @@ export class CategoriaEstudio {
       )
       if (rowCount) return true
       return false
-    } catch (error) {
-      throw new Error(' Internal error ')
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -60,7 +60,7 @@ export class CategoriaEstudio {
       )
       return row[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

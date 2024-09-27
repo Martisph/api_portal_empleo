@@ -8,7 +8,7 @@ export class Departamento {
       )
       return rows
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -20,14 +20,14 @@ export class Departamento {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
   static async postDepartamento ({ data }) {
     try {
       const { rows } = await pool.query(
-        `INSERT INTO Departamentos(fk_id_pais, nombre))
+        `INSERT INTO Departamentos(fk_id_pais, nombre)
         VALUES($1, $2) RETURNING *`,
         [
           data.fk_id_pais,
@@ -36,7 +36,7 @@ export class Departamento {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 
@@ -49,7 +49,7 @@ export class Departamento {
       if (rowCount) return true
       return false
     } catch (e) {
-      throw new Error(' Internar error ')
+      throw new Error(' Internar error ' + e.message)
     }
   }
 
@@ -63,7 +63,7 @@ export class Departamento {
       )
       return rows[0]
     } catch (e) {
-      throw new Error(' Internal error ')
+      throw new Error(' Internal error ' + e.message)
     }
   }
 }

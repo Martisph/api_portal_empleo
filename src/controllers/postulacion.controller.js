@@ -3,7 +3,7 @@ import { validatePostulacion } from '../schemas/postulacion.js'
 
 export const getPostulaciones = async (req, res) => {
   try {
-    const postulaciones = await Postulacion.getAreas()
+    const postulaciones = await Postulacion.getPostulaciones()
     return res.status(200).json(postulaciones)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -12,7 +12,7 @@ export const getPostulaciones = async (req, res) => {
 
 export const getPostulacion = async (req, res) => {
   try {
-    const postulacion = await Postulacion.getArea(req.params)
+    const postulacion = await Postulacion.getPostulacion(req.params)
     if (!postulacion) {
       return res.status(404).json({ message: ' Dato no encontrado ' })
     }
@@ -25,7 +25,7 @@ export const getPostulacion = async (req, res) => {
 export const postPostulacion = async (req, res) => {
   try {
     const data = validatePostulacion(req.body)
-    const postulacion = await Postulacion.postArea(data)
+    const postulacion = await Postulacion.postPostulacion(data)
     return res.status(200).json(postulacion)
   } catch (e) {
     return res.status(500).json({ message: e.message })
@@ -34,11 +34,11 @@ export const postPostulacion = async (req, res) => {
 
 export const deletePostulacion = async (req, res) => {
   try {
-    const postulacion = await Postulacion.deleteArea(req.params)
+    const postulacion = await Postulacion.deletePostulacion(req.params)
     if (postulacion) {
-      return res.status(200).json({ message: 'Categoria de Postulacion eliminado' })
+      return res.status(200).json({ message: ' Dato de postulacion eliminado ' })
     }
-    return res.status(404).json({ message: 'Categoria de Postulacion no encontrado' })
+    return res.status(404).json({ message: ' Dato de postulacion no eliminado ' })
   } catch (e) {
     return res.status(500).json({ message: e.message })
   }
@@ -47,7 +47,7 @@ export const deletePostulacion = async (req, res) => {
 export const putPostulacion = async (req, res) => {
   try {
     const data = validatePostulacion(req.body)
-    const postulacion = await Postulacion.putArea(req.params, data)
+    const postulacion = await Postulacion.putPostulacion(req.params, data)
     return res.json(postulacion)
   } catch (e) {
     res.status(500).json({ message: e.message })

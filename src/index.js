@@ -39,5 +39,8 @@ app.use('/postulacion', routerPostulaciones) // Postulaciones
 app.use('/ubicacion', routerUbicaciones) // Ubicacion
 app.use('/usuario', routerUsuarios) // Usuario
 
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ruta no definida' })
+})
 app.listen(PORT)
 console.log('server port', PORT)
