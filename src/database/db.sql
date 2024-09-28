@@ -6,173 +6,154 @@ CREATE DATABASE witreeljobsdb;
 -- Conectar a la base de datos witreeljobsdb
 \c witreeljobsdb
 
--- Crear tabla país
-CREATE TABLE pais (
-    idpais SERIAL PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL
+CREATE TABLE Paises (
+    id_pais SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
 );
 
--- Crear tabla departamento
-CREATE TABLE departamento (
-    iddepartamento SERIAL PRIMARY KEY,
-    idpais INT,
-    nombre VARCHAR(255) NOT NULL,
-    FOREIGN KEY (idpais) REFERENCES pais(idpais)
-);
-
--- Crear tabla ubicacion-distrito
-CREATE TABLE ubicacion_distrito (
-    idubicacion SERIAL PRIMARY KEY,
-    iddepartamento INT,
-    nombreubicacion VARCHAR(255) NOT NULL,
-    FOREIGN KEY (iddepartamento) REFERENCES departamento(iddepartamento)
-);
-
--- Crear tabla usuario
-CREATE TABLE usuario (
-    idusuario SERIAL PRIMARY KEY,
-    idubicacion INT,
-    nombre VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    contraseña VARCHAR(255) NOT NULL,
-    tipo_usuario VARCHAR(50),
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idubicacion) REFERENCES ubicacion_distrito(idubicacion)
-);
-
--- Crear tabla categoria-estudio
-CREATE TABLE categoria_estudio (
-    idcategoriaestudio SERIAL PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
+CREATE TABLE Areas (
+    id_area SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
     descripcion TEXT
 );
 
--- Crear tabla areas
-CREATE TABLE areas (
-    idareas SERIAL PRIMARY KEY,
-    nombre_areas VARCHAR(255) NOT NULL,
+CREATE TABLE Categoria_Estudios (
+    id_categoria_estudio SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
     descripcion TEXT
 );
 
--- Crear tabla candidatos
-CREATE TABLE candidatos (
-    idcandidato SERIAL PRIMARY KEY,
-    idusuario INT,
-    idarea INT,
-    apellidos VARCHAR(255) NOT NULL,
-    genero CHAR(1),
-    estado_civil VARCHAR(50),
-    fechanacimiento DATE,
-    ciudad VARCHAR(255),
+CREATE TABLE Departamentos (
+    id_departamento SERIAL PRIMARY KEY,
+    fk_id_pais INT REFERENCES Paises(id_pais) ON DELETE CASCADE,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Ubicaciones (
+    id_ubicacion SERIAL PRIMARY KEY,
+    fk_id_departamento INT REFERENCES Departamentos(id_departamento) ON DELETE CASCADE,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    fk_id_ubicacion INT REFERENCES Ubicaciones(id_ubicacion) ON DELETE SET NULL,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
+    rol VARCHAR(50),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Candidatos (
+    id_candidato SERIAL PRIMARY KEY,
+    fk_id_usuario INT REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    fk_id_area INT REFERENCES Areas(id_area) ON DELETE SET NULL,
+    apellido VARCHAR(100) NOT NULL,
+    genero VARCHAR(10),
+    estado_civil VARCHAR(20),
+    fecha_nacimiento DATE,
+    direccion VARCHAR(255),
     telefono VARCHAR(20),
-    linkedin VARCHAR(255),
-    FOREIGN KEY (idusuario) REFERENCES usuario(idusuario),
-    FOREIGN KEY (idarea) REFERENCES areas(idareas)
+    linkedin VARCHAR(255)
 );
 
--- Crear tabla idiomas
-CREATE TABLE idiomas (
-    ididioma SERIAL PRIMARY KEY,
-    idcandidato INT,
-    nombre VARCHAR(255) NOT NULL,
-    nivel VARCHAR(50),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato)
-);
-
--- Crear tabla experiencia
-CREATE TABLE experiencia (
-    idexperiencia SERIAL PRIMARY KEY,
-    idcandidato INT,
-    titulo VARCHAR(255) NOT NULL,
+CREATE TABLE Empresas (
+    id_empresa SERIAL PRIMARY KEY,
+    fk_id_usuario INT REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    nombre VARCHAR(100) NOT NULL,
+    razon_social VARCHAR(100),
     descripcion TEXT,
-    fechainicio DATE,
-    fechafin DATE,
-    estado VARCHAR(50),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato)
-);
-
--- Crear tabla estudio
-CREATE TABLE estudio (
-    idcategoriaestudio INT,
-    idcandidato INT,
-    titulo VARCHAR(255) NOT NULL,
-    descripcion TEXT,
-    estado VARCHAR(50),
-    PRIMARY KEY (idcategoriaestudio, idcandidato),
-    FOREIGN KEY (idcategoriaestudio) REFERENCES categoria_estudio(idcategoriaestudio),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato)
-);
-
--- Crear tabla empresa
-CREATE TABLE empresa (
-    idusuario INT PRIMARY KEY,
-    nombre_empresa VARCHAR(255) NOT NULL,
-    razon_social VARCHAR(255) NOT NULL,
-    descripcion TEXT,
-    ruc VARCHAR(20),
+    ruc VARCHAR(20) UNIQUE NOT NULL,
     vision TEXT,
     mision TEXT,
     valores TEXT,
-    sector VARCHAR(255),
-    ciudad VARCHAR(255),
+    sector VARCHAR(100),
+    direccion VARCHAR(255),
     telefono VARCHAR(20),
-    correo_electronico VARCHAR(255),
-    FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
+    email VARCHAR(100) UNIQUE NOT NULL
 );
 
--- Crear tabla notificaciones
-CREATE TABLE notificaciones (
-    idnotificaciones SERIAL PRIMARY KEY,
-    idempresa INT,
-    idcandidato INT,
-    titulo VARCHAR(255) NOT NULL,
+CREATE TABLE Idiomas (
+    id_idioma SERIAL PRIMARY KEY,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    nombre VARCHAR(100) NOT NULL,
+    nivel VARCHAR(50)
+);
+
+CREATE TABLE Experiencias (
+    id_experiencia SERIAL PRIMARY KEY,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    titulo VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    estado_publicacion VARCHAR(50),
-    fecha_hora TIMESTAMP NOT NULL,
-    FOREIGN KEY (idempresa) REFERENCES empresa(idusuario),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato)
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    estado VARCHAR(50)
 );
 
--- Crear tabla comentario
-CREATE TABLE comentario (
-    idcomentario SERIAL PRIMARY KEY,
-    idcandidato INT,
-    idempresa INT,
+CREATE TABLE Estudios (
+    id_estudio SERIAL PRIMARY KEY,
+    fk_id_categoria_estudio INT REFERENCES Categoria_Estudios(id_categoria_estudio) ON DELETE SET NULL,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    estado VARCHAR(50)
+);
+
+CREATE TABLE Comentarios (
+    id_comentario SERIAL PRIMARY KEY,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
     descripcion TEXT,
     puntaje INT CHECK (puntaje BETWEEN 1 AND 5),
-    estado_comentario VARCHAR(50),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato),
-    FOREIGN KEY (idempresa) REFERENCES empresa(idusuario)
+    estado VARCHAR(50)
 );
 
--- Crear tabla anuncio
-CREATE TABLE anuncio (
-    idanuncio SERIAL PRIMARY KEY,
-    idubicacion INT,
-    idareas INT,
-    idcategoriaestudio INT,
-    tipocontrato VARCHAR(50),
+CREATE TABLE Anuncios (
+    id_anuncio SERIAL PRIMARY KEY,
+    fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
+    fk_id_ubicacion INT REFERENCES Ubicaciones(id_ubicacion) ON DELETE SET NULL,
+    fk_id_area INT REFERENCES Areas(id_area) ON DELETE SET NULL,
+    fk_id_categoria_estudio INT REFERENCES Categoria_Estudios(id_categoria_estudio) ON DELETE SET NULL,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    funciones TEXT,
+    requisitos TEXT,
+    habilidades TEXT,
+    requerimientos TEXT,
+    beneficios TEXT,
+    direccion VARCHAR(255),
+    fecha_entrevista DATE,
+    fecha_publicacion DATE,
+    tipo_contrato VARCHAR(50),
     modalidad VARCHAR(50),
     jornada_laboral VARCHAR(50),
-    salario DECIMAL(10, 2),
-    ciudad VARCHAR(255),
-    descripcion_requisitos_anuncio TEXT,
+    horario_trabajo VARCHAR(50),
     cantidad_vacantes INT,
-    edad_minima INT,    
-    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idubicacion) REFERENCES ubicacion_distrito(idubicacion),
-    FOREIGN KEY (idareas) REFERENCES areas(idareas),
-    FOREIGN KEY (idcategoriaestudio) REFERENCES categoria_estudio(idcategoriaestudio)
+    salario_minimo DECIMAL(10, 2),
+    edad_minima INT,
+    edad_maxima INT,
+    experiencia_anios INT,
+    estudio VARCHAR(100),
+    discapacitados BOOLEAN
 );
 
--- Crear tabla postulaciones
-CREATE TABLE postulaciones (
-    idcandidato INT,
-    idempresa INT,
-    idanuncio INT,
+CREATE TABLE Postulaciones (
+    id_postulacion SERIAL PRIMARY KEY,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
+    fk_id_anuncio INT REFERENCES Anuncios(id_anuncio) ON DELETE CASCADE,
     estado VARCHAR(50),
-    PRIMARY KEY (idcandidato, idempresa, idanuncio),
-    FOREIGN KEY (idcandidato) REFERENCES candidatos(idcandidato),
-    FOREIGN KEY (idempresa) REFERENCES empresa(idusuario),
-    FOREIGN KEY (idanuncio) REFERENCES anuncio(idanuncio)
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE Notificaciones (
+    id_notificacion SERIAL PRIMARY KEY,
+    fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
+    fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
+    titulo VARCHAR(100),
+    descripcion TEXT,
+    estado_publicacion VARCHAR(50),
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
