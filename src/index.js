@@ -1,5 +1,6 @@
 import { routerAnuncios } from './routes/anuncio.routes.js'
 import { routerAreas } from './routes/area.routes.js'
+import { routerLogin } from './routes/autentificacion.routes.js'
 import { routerCandidatos } from './routes/candidato.routes.js'
 import { routerCategoriaStudios } from './routes/categoria_estudio.routes.js'
 import { routerComentarios } from './routes/comentario.routes.js'
@@ -19,12 +20,18 @@ import { PORT } from './config.js'
 
 const app = express()
 
-app.disable('x-powered-by') // Desabilitamos informacion express
+app.set('view engine', 'ejs')
 
+app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
+
+app.get('/', (req, res) => {
+  res.render('example', { name: 'Stiph' })
+})
 
 app.use('/anuncio', routerAnuncios) // Anuncio
 app.use('/area', routerAreas) // Area
+app.use('/login', routerLogin) // login
 app.use('/candidato', routerCandidatos) // Candidato
 app.use('/categoria_estudio', routerCategoriaStudios) // Categoria estudio
 app.use('/comentario', routerComentarios) // Comentario

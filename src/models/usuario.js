@@ -1,6 +1,12 @@
 import { pool } from '../database/db.js'
+import bcrypt from 'bcrypt'
 
 export class Usuario {
+  constructor ({ data }) {
+    this.email = data.email
+    this.contrasena = data.contrasena
+  }
+
   static async getUsuarios () {
     try {
       const { rows } = await pool.query('SELECT * FROM Usuarios')
@@ -24,6 +30,7 @@ export class Usuario {
 
   static async postUsuario ({ data }) {
     try {
+      const hashedpass = await bcrypt.hash(data.contrasena, 10)
       const { rows } = await pool.query(
         `INSERT INTO Usuarios
                 (fk_id_ubicacion, nombre, email, contrasena, rol)
@@ -32,7 +39,7 @@ export class Usuario {
           data.fk_id_ubicacion,
           data.nombre,
           data.email,
-          data.contrasena,
+          hashedpass,
           data.rol
         ]
       )
@@ -57,6 +64,7 @@ export class Usuario {
 
   static async putUsuario ({ id }, { data }) {
     try {
+      const hashedpass = await bcrypt.hash(data.contrasena, 10)
       const { rows } = await pool.query(
         `UPDATE Usuarios SET 
               fk_id_ubicacion = $1,
@@ -69,7 +77,7 @@ export class Usuario {
           data.fk_id_ubicacion,
           data.nombre,
           data.email,
-          data.contrasena,
+          hashedpass,
           data.rol,
           id
         ]
@@ -77,6 +85,42 @@ export class Usuario {
       return rows[0]
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
+    }
+  }
+
+  static async existsEmail ({ data }) {
+    try {
+      const email = await pool.query(
+        'SELECT email FROM Usuarios WHERE email = $1',
+        [data.email]
+      )
+      return email
+    } catch (e) {
+      return { message: 'error' }
+    }
+  }
+
+  async loginUsuario () {
+    try {
+      const { rows } = await pool.query(
+        'SELECT id_usuario, nombre, email, contrasena FROM Usuarios WHERE email = $1',
+        [this.email]
+      )
+      if (rows[0]) {
+        const valores = rows[0]
+        const isValid = await bcrypt.compare(this.contrasena, valores.contrasena)
+        if (isValid) {
+          return {
+            id: valores.id_usuario,
+            nombre: valores.nombre,
+            email: valores.email
+          }
+        }
+        throw new Error(' Credenciales invalidos ')
+      }
+      throw new Error(' Usuario no existe ')
+    } catch (e) {
+      throw new Error(e.message)
     }
   }
 }
