@@ -26,7 +26,12 @@ app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
 
 app.get('/', (req, res) => {
-  res.render('example', { name: 'Stiph' })
+  res.render('index')
+})
+app.post('/logout', (req, res) => {})
+
+app.get('/protected', (req, res) => {
+  res.render('protected')
 })
 
 app.use('/anuncio', routerAnuncios) // Anuncio
