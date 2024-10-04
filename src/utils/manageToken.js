@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 import { SECRET_JWS_KEY, SECRET_JWS_KEY_REFRESH } from '../config.js'
 
-export const generateToken = (id, name) => {
+export const generateToken = (_id, name) => {
   try {
     const expiresIn = '5m'
-    const token = jwt.sign({ id, name },
+    const token = jwt.sign({ _id, name },
       SECRET_JWS_KEY,
       { expiresIn })
     return { token, expiresIn }
@@ -13,10 +13,10 @@ export const generateToken = (id, name) => {
   }
 }
 
-export const generateRefreshToken = (id, name, res) => {
+export const generateRefreshToken = (_id, name, res) => {
   try {
     const expiresIn = 60 * 60 * 24 * 7
-    const refreshToken = jwt.sign({ id, name },
+    const refreshToken = jwt.sign({ _id, name },
       SECRET_JWS_KEY_REFRESH,
       { expiresIn })
     res.cookie('access_token_refresh', refreshToken, {

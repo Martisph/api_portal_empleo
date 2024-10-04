@@ -10,8 +10,8 @@ export async function auntentificacionController (req, res) {
     const user = await new Usuario(data)
     const login = await user.loginUsuario()
     if (login) {
-      const { token, expiresIn } = generateToken(login.id_usuario, login.nombre)
-      generateRefreshToken(login.id_usuario, login.nombre, res)
+      const { token, expiresIn } = generateToken(login._id, login.nombre)
+      generateRefreshToken(login._id, login.nombre, res)
       return res.status(200).json({ token, expiresIn })
     }
     return res.status(500).json({ message: ' Internal error ' })

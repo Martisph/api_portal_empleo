@@ -111,7 +111,7 @@ export class Usuario {
         const isValid = await bcrypt.compare(this.contrasena, valores.contrasena)
         if (isValid) {
           return {
-            id: valores.id_usuario,
+            _id: valores.id_usuario,
             nombre: valores.nombre,
             email: valores.email
           }
