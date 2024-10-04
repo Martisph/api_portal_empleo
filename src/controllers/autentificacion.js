@@ -20,6 +20,14 @@ export async function auntentificacionController (req, res) {
   }
 }
 
+export async function logoutController (req, res) {
+  try {
+    return res.clearCookie('access_token_refresh').status(200).json({ message: 'Logout succesful' })
+  } catch (e) {
+    return res.status(401).json({ message: e })
+  }
+}
+
 export const refreshToken = (req, res) => {
   try {
     const refreshTokenCookie = req.cookies.access_token

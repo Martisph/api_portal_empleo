@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { SECRET_JWS_KEY_REFRESH } from '../config'
+import { SECRET_JWS_KEY_REFRESH } from '../config.js'
 
 export const requireToken = (req, res, next) => {
   try {
@@ -19,4 +19,14 @@ export const requireToken = (req, res, next) => {
     }
     return res.status(401).json({ error: TokenVerficationErrors[e.message] })
   }
+}
+
+export const requireRefreshToken = (req, res, next) => {
+  const token = req.cookies.access_token_refresh
+  req.session = { user: null }
+  try {
+    const data = jwt.verify(token, SECRET_JWS_KEY_REFRESH)
+    req.session.user = data
+  } catch {}
+  next()
 }

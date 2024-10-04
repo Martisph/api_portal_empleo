@@ -120,7 +120,7 @@
             const email = $('#login-email').value
             const contrasena= $('#login-contrasena').value
 
-            fetch('/login', {
+            fetch('/sesion/login', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -175,7 +175,7 @@
 
         logoutButton?.addEventListener('click', e=>{
             e.preventDefault()
-            fetch('/logout', {
+            fetch('/sesion/logout', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'

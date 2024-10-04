@@ -1,6 +1,6 @@
 import { routerAnuncios } from './routes/anuncio.routes.js'
 import { routerAreas } from './routes/area.routes.js'
-import { routerLogin } from './routes/autentificacion.routes.js'
+import { routerSesion } from './routes/autentificacion.routes.js'
 import { routerCandidatos } from './routes/candidato.routes.js'
 import { routerCategoriaStudios } from './routes/categoria_estudio.routes.js'
 import { routerComentarios } from './routes/comentario.routes.js'
@@ -16,11 +16,10 @@ import { routerUbicaciones } from './routes/ubicacion.routes.js'
 import { routerUsuarios } from './routes/usuario.routes.js'
 
 import express from 'express'
-import { PORT, SECRET_JWS_KEY_REFRESH } from './config.js'
+import { PORT } from './config.js'
 import cookieParser from 'cookie-parser'
 
-import jwt from 'jsonwebtoken'
-
+import { requireRefreshToken } from './middlewares/requiredToken.js'
 const app = express()
 
 app.set('view engine', 'ejs')
@@ -28,20 +27,7 @@ app.set('view engine', 'ejs')
 app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
 app.use(cookieParser())
-
-app.use((req, res, next) => {
-  const token = req.cookies.access_token_refresh
-  req.session = { user: null }
-  try {
-    const data = jwt.verify(token, SECRET_JWS_KEY_REFRESH)
-    req.session.user = data
-  } catch {}
-  next()
-})
-
-app.post('/logout', (req, res) => {
-  res.clearCookie('access_token').json({ message: 'Logout succesful' })
-})
+app.use(requireRefreshToken)
 
 app.get('/', (req, res) => {
   const { user } = req.session
@@ -56,7 +42,7 @@ app.get('/protected', (req, res) => {
 
 app.use('/anuncio', routerAnuncios) // Anuncio
 app.use('/area', routerAreas) // Area
-app.use('/login', routerLogin) // login
+app.use('/sesion', routerSesion) // sesion
 app.use('/candidato', routerCandidatos) // Candidato
 app.use('/categoria_estudio', routerCategoriaStudios) // Categoria estudio
 app.use('/comentario', routerComentarios) // Comentario

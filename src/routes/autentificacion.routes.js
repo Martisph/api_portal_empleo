@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import { auntentificacionController, refresToken } from '../controllers/autentificacion.js'
+import { auntentificacionController, refreshToken, logoutController } from '../controllers/autentificacion.js'
 
-export const routerLogin = Router()
+export const routerSesion = Router()
 
-routerLogin.post('/', auntentificacionController)
-routerLogin.post('/refresh', refresToken)
+routerSesion.post('/login', auntentificacionController)
+routerSesion.post('/logout', logoutController)
+routerSesion.post('/refresh', refreshToken)
