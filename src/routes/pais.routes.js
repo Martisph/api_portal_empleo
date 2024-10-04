@@ -6,6 +6,7 @@ import {
   postPais,
   putPais
 } from '../controllers/pais.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerPaises = Router()
 
@@ -13,8 +14,8 @@ routerPaises.get('/', getPaises)
 
 routerPaises.get('/:id', getPais)
 
-routerPaises.post('/', postPais)
+routerPaises.post('/', userSesionMiddleware, postPais)
 
-routerPaises.delete('/:id', deletePais)
+routerPaises.delete('/:id', userSesionMiddleware, deletePais)
 
-routerPaises.put('/:id', putPais)
+routerPaises.put('/:id', userSesionMiddleware, putPais)

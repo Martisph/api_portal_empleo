@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import { deleteNotificacion, getNotificacion, getNotificaciones, postNotificacion, putNotificacion } from '../controllers/notificacion.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerNotificaciones = Router()
 
-routerNotificaciones.get('/', getNotificaciones)
+routerNotificaciones.get('/', userSesionMiddleware, getNotificaciones)
 
-routerNotificaciones.get('/:id', getNotificacion)
+routerNotificaciones.get('/:id', userSesionMiddleware, getNotificacion)
 
-routerNotificaciones.post('/', postNotificacion)
+routerNotificaciones.post('/', userSesionMiddleware, postNotificacion)
 
-routerNotificaciones.delete('/:id', deleteNotificacion)
+routerNotificaciones.delete('/:id', userSesionMiddleware, deleteNotificacion)
 
-routerNotificaciones.put('/:id', putNotificacion)
+routerNotificaciones.put('/:id', userSesionMiddleware, putNotificacion)

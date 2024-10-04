@@ -6,6 +6,7 @@ import {
   postComentario,
   putComentario
 } from '../controllers/comentario.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerComentarios = Router()
 
@@ -13,8 +14,8 @@ routerComentarios.get('/', getComentarios)
 
 routerComentarios.get('/:id', getComentario)
 
-routerComentarios.post('/', postComentario)
+routerComentarios.post('/', userSesionMiddleware, postComentario)
 
-routerComentarios.delete('/:id', deleteComentario)
+routerComentarios.delete('/:id', userSesionMiddleware, deleteComentario)
 
-routerComentarios.put('/:id', putComentario)
+routerComentarios.put('/:id', userSesionMiddleware, putComentario)

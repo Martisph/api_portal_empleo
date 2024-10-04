@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { deleteDepartamento, getDepartamento, getDepartamentos, postDepartamento, putDepartamento } from '../controllers/departamento.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerDepartamentos = Router()
 
@@ -7,8 +8,8 @@ routerDepartamentos.get('/', getDepartamentos)
 
 routerDepartamentos.get('/:id', getDepartamento)
 
-routerDepartamentos.post('/', postDepartamento)
+routerDepartamentos.post('/', userSesionMiddleware, postDepartamento)
 
-routerDepartamentos.delete('/:id', deleteDepartamento)
+routerDepartamentos.delete('/:id', userSesionMiddleware, deleteDepartamento)
 
-routerDepartamentos.put('/:id', putDepartamento)
+routerDepartamentos.put('/:id', userSesionMiddleware, putDepartamento)

@@ -6,6 +6,7 @@ import {
   deleteUbicacion,
   putUbicacion
 } from '../controllers/ubicacion.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerUbicaciones = Router()
 
@@ -13,8 +14,8 @@ routerUbicaciones.get('/', getUbicaciones)
 
 routerUbicaciones.get('/:id', getUbicacion)
 
-routerUbicaciones.post('/', postUbicacion)
+routerUbicaciones.post('/', userSesionMiddleware, postUbicacion)
 
-routerUbicaciones.delete('/:id', deleteUbicacion)
+routerUbicaciones.delete('/:id', userSesionMiddleware, deleteUbicacion)
 
-routerUbicaciones.put('/:id', putUbicacion)
+routerUbicaciones.put('/:id', userSesionMiddleware, putUbicacion)

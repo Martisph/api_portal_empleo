@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import { deletePostulacion, getPostulacion, getPostulaciones, postPostulacion, putPostulacion } from '../controllers/postulacion.controller.js'
+import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerPostulaciones = Router()
 
-routerPostulaciones.get('/', getPostulaciones)
+routerPostulaciones.get('/', userSesionMiddleware, getPostulaciones)
 
-routerPostulaciones.get('/:id', getPostulacion)
+routerPostulaciones.get('/:id', userSesionMiddleware, getPostulacion)
 
-routerPostulaciones.post('/', postPostulacion)
+routerPostulaciones.post('/', userSesionMiddleware, postPostulacion)
 
-routerPostulaciones.delete('/:id', deletePostulacion)
+routerPostulaciones.delete('/:id', userSesionMiddleware, deletePostulacion)
 
-routerPostulaciones.put('/:id', putPostulacion)
+routerPostulaciones.put('/:id', userSesionMiddleware, putPostulacion)
