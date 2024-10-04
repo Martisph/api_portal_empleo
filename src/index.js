@@ -16,7 +16,10 @@ import { routerUbicaciones } from './routes/ubicacion.routes.js'
 import { routerUsuarios } from './routes/usuario.routes.js'
 
 import express from 'express'
-import { PORT } from './config.js'
+import { PORT, SECRET_JWS_KEY_REFRESH } from './config.js'
+import cookieParser from 'cookie-parser'
+
+import jwt from 'jsonwebtoken'
 
 const app = express()
 
@@ -24,14 +27,31 @@ app.set('view engine', 'ejs')
 
 app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
+app.use(cookieParser())
+
+app.use((req, res, next) => {
+  const token = req.cookies.access_token_refresh
+  req.session = { user: null }
+  try {
+    const data = jwt.verify(token, SECRET_JWS_KEY_REFRESH)
+    req.session.user = data
+  } catch {}
+  next()
+})
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('access_token').json({ message: 'Logout succesful' })
+})
 
 app.get('/', (req, res) => {
-  res.render('index')
+  const { user } = req.session
+  res.render('index', user)
 })
-app.post('/logout', (req, res) => {})
 
 app.get('/protected', (req, res) => {
-  res.render('protected')
+  const { user } = req.session
+  if (!user) return res.status(403).send('Access not Autorized')
+  res.render('protected', user)
 })
 
 app.use('/anuncio', routerAnuncios) // Anuncio
