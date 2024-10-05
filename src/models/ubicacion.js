@@ -2,7 +2,11 @@ import { pool } from '../database/db.js'
 export class Ubicacion {
   static async getUbicaciones () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Ubicaciones')
+      const { rows } = await pool.query(
+        `SELECT u.id_ubicacion, p.nombre AS pais, d.nombre AS departamento, u.nombre AS ubicacion
+          FROM Ubicaciones u JOIN Departamentos d ON u.fk_id_departamento = d.id_departamento
+          JOIN Paises p ON d.fk_id_pais = p.id_pais`
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error' + e.message)
@@ -12,7 +16,10 @@ export class Ubicacion {
   static async getUbicacion ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Ubicaciones WHERE id_ubicacion =$1',
+        `SELECT p.nombre AS pais, d.nombre AS departamento, u.nombre AS ubicacion 
+          FROM Ubicaciones u JOIN Departamentos d ON u.fk_id_departamento = d.id_departamento
+          JOIN Paises p ON d.fk_id_pais = p.id_pais  
+          WHERE u.id_ubicacion =$1`,
         [id]
       )
       return rows[0]

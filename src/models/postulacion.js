@@ -3,7 +3,12 @@ import { pool } from '../database/db.js'
 export class Postulacion {
   static async getPostulaciones () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Postulaciones')
+      const { rows } = await pool.query(
+        `SELECT post.id_postulacion, cand.apellido, anun.titulo, post.estado
+          FROM Postulaciones post 
+          JOIN Candidatos cand ON post.fk_id_candidato = cand.id_candidato
+          JOIN Anuncios anun ON post.fk_id_anuncio = anun.id_anuncio ORDER BY post.fecha_creacion DESC`
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
@@ -13,7 +18,11 @@ export class Postulacion {
   static async getPostulacion ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Postulaciones WHERE id_postulacion =$1',
+        `SELECT cand.apellido, anun.titulo, post.estado, post.fecha_creacion
+          FROM Postulaciones post 
+          JOIN Candidatos cand ON post.fk_id_candidato = cand.id_candidato
+          JOIN Anuncios anun ON post.fk_id_anuncio = anun.id_anuncio
+          WHERE post.id_postulacion = $1`,
         [id]
       )
       return rows[0]

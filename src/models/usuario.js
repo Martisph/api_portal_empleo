@@ -9,7 +9,7 @@ export class Usuario {
 
   static async getUsuarios () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Usuarios')
+      const { rows } = await pool.query('SELECT id_usuario, nombre, email FROM Usuarios')
       return rows
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
@@ -19,7 +19,12 @@ export class Usuario {
   static async getUsuario ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Usuarios WHERE id_usuario =$1',
+        `SELECT usu.id_usuario, dep.nombre AS departamento,
+        ubi.nombre AS ubicacion, usu.nombre, usu.email 
+        FROM Usuarios usu
+        JOIN Ubicaciones ubi ON usu.fk_id_ubicacion = ubi.id_ubicacion
+        JOIN Departamentos dep ON ubi.fk_id_departamento = dep.id_departamento
+        WHERE id_usuario =$1`,
         [id]
       )
       return rows[0]

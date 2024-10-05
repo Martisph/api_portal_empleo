@@ -3,7 +3,15 @@ import { pool } from '../database/db.js'
 export class Anuncio {
   static async getAnuncios () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Anuncios')
+      const { rows } = await pool.query(
+        `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
+          are.nombre AS area, anun.titulo, anun.descripcion,
+          anun.direccion, anun.discapacitados
+          FROM Anuncios anun 
+        JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
+        JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
+        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_creacion DESC LIMIT 5`
+      )
       return rows
     } catch (e) {
       throw new Error('Internal error' + e.message)
@@ -13,7 +21,19 @@ export class Anuncio {
   static async getAnuncio ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Anuncios WHERE id_anuncio =$1',
+        `SELECT emp.nombre AS empresa, ubic.nombre AS ubicacion, are.nombre AS area,
+          anun.fk_id_categoria_estudio, anun.titulo, anun.descripcion,
+          anun.funciones, anun.requisitos, anun.habilidades,
+          anun.requerimientos, anun.beneficios, anun.direccion,
+          anun.fecha_entrevista, anun.tipo_contrato, anun.modalidad,
+          anun.jornada_laboral, anun.horario_trabajo, anun.cantidad_vacantes,
+          anun.salario_minimo, anun.edad_minima, anun.edad_maxima, 
+          anun.experiencia_anios, anun.estudio, anun.discapacitados 
+          FROM Anuncios anun 
+        JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
+        JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
+        JOIN Areas are ON anun.fk_id_area = are.id_area
+        WHERE anun.id_anuncio =$1`,
         [id]
       )
       return rows[0]

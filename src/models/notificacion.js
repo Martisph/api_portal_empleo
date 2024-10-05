@@ -3,7 +3,12 @@ import { pool } from '../database/db.js'
 export class Notificacion {
   static async getNotificaciones () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Notificaciones')
+      const { rows } = await pool.query(
+        `SELECT noti.id_notificacion, emp.nombre,
+          noti.titulo, noti.estado
+          FROM Notificaciones noti
+          JOIN Empresas emp ON noti.fk_id_empresa = emp.id_empresa`
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
@@ -13,7 +18,12 @@ export class Notificacion {
   static async getNotificacion ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Notificaciones WHERE id_notificacion =$1',
+        `SELECT emp.nombre, cand.apellido,
+          noti.titulo, noti.descripcion, noti.estado, noti.fecha_creacion
+          FROM Notificaciones noti
+          JOIN Empresas emp ON noti.fk_id_empresa = emp.id_empresa
+          JOIN Candidatos cand ON noti.fk_id_candidato = cand.id_candidato
+          WHERE noti.id_notificacion = $1`,
         [id]
       )
       return rows[0]
