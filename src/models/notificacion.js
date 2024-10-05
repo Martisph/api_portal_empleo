@@ -26,14 +26,13 @@ export class Notificacion {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Notificaciones
-            (fk_id_empresa, fk_id_candidato, titulo, descripcion, estado_publicacion)
-            VALUES($1, $2, $3, $4, $5) RETURNING *`,
+            (fk_id_empresa, fk_id_candidato, titulo, descripcion)
+            VALUES($1, $2, $3, $4) RETURNING *`,
         [
           data.fk_id_empresa,
           data.fk_id_candidato,
           data.titulo,
-          data.descripcion,
-          data.estado_publicacion
+          data.descripcion
         ]
       )
       return rows[0]
@@ -63,16 +62,14 @@ export class Notificacion {
           fk_id_candidato = $2,
           titulo = $3,
           descripcion = $4,
-          estado_publicacion = $5,
-          fecha_hora = $6
-          WHERE id_notificacion = $7 RETURNING *`,
+          estado = $5,
+          WHERE id_notificacion = $6 RETURNING *`,
         [
           data.fk_id_empresa,
           data.fk_id_candidato,
           data.titulo,
           data.descripcion,
-          data.estado_publicacion,
-          data.fecha_hora,
+          data.estado,
           id
         ]
       )

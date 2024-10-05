@@ -39,7 +39,7 @@ export class CategoriaEstudio {
   static async deleteCategoriaEstudio ({ id }) {
     try {
       const { rowCount } = await pool.query(
-        'DELETE FROM Categoria_estudios WHERE id_categoria_estudio = $1 RETURNING *',
+        'DELETE FROM Categoria_Estudios WHERE id_categoria_estudio = $1 RETURNING *',
         [id]
       )
       if (rowCount) return true

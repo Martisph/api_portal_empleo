@@ -4,8 +4,7 @@ const notificacionSchema = z.object({
   fk_id_empresa: z.number(),
   fk_id_candidato: z.number(),
   titulo: z.string(),
-  descripcion: z.string(),
-  estado_publicacion: z.string()
+  descripcion: z.string()
 })
 
 export function validateNotificacion (object) {
