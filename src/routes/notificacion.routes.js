@@ -4,7 +4,7 @@ import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerNotificaciones = Router()
 
-routerNotificaciones.get('/', userSesionMiddleware, getNotificaciones)
+routerNotificaciones.get('/', getNotificaciones) // agregar depues de pruebas
 
 routerNotificaciones.get('/:id', userSesionMiddleware, getNotificacion)
 

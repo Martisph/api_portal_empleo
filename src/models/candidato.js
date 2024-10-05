@@ -13,7 +13,11 @@ export class Candidato {
   static async getCandidato ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Candidatos WHERE id_candidato =$1',
+        `SELECT
+         u.id_usuario, u.fk_id_ubicacion, u.nombre, u.email,
+         c.apellido, c.genero, c.estado_civil, c.fecha_nacimiento, c.direccion, c.telefono, c.linkedin
+         FROM Candidatos c JOIN Usuarios u ON c.fk_id_usuario = u.id_usuario
+         WHERE c.id_candidato = $1`,
         [id]
       )
       return rows[0]
@@ -24,6 +28,7 @@ export class Candidato {
 
   static async postCandidato ({ data }) {
     try {
+      console.log(data.fk_id_usuario)
       const { rows } = await pool.query(
         `INSERT INTO Candidatos
               (fk_id_usuario, fk_id_area, apellido, genero, estado_civil, fecha_nacimiento, direccion, telefono, linkedin)

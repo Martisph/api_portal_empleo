@@ -5,28 +5,28 @@ CREATE DATABASE witreeljobsdb;
 
 -- Conectar a la base de datos witreeljobsdb
 \c witreeljobsdb
-
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE Paises (
     id_pais SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE Areas (
     id_area SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(150) NOT NULL UNIQUE,
     descripcion TEXT
 );
 
 CREATE TABLE Categoria_Estudios (
     id_categoria_estudio SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(150) NOT NULL UNIQUE,
     descripcion TEXT
 );
 
 CREATE TABLE Departamentos (
     id_departamento SERIAL PRIMARY KEY,
     fk_id_pais INT REFERENCES Paises(id_pais) ON DELETE CASCADE,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(150) NOT NULL
 );
 
 CREATE TABLE Ubicaciones (
@@ -36,33 +36,36 @@ CREATE TABLE Ubicaciones (
 );
 
 CREATE TABLE Usuarios (
-    id_usuario SERIAL PRIMARY KEY,
+    id_usuario UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     fk_id_ubicacion INT REFERENCES Ubicaciones(id_ubicacion) ON DELETE SET NULL,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
-    rol VARCHAR(50),
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    rol VARCHAR(50) CHECK (rol IN ('candidato','empresa')),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Candidatos (
     id_candidato SERIAL PRIMARY KEY,
-    fk_id_usuario INT REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    fk_id_usuario UUID REFERENCES Usuarios(id_usuario)  ON DELETE CASCADE,
     fk_id_area INT REFERENCES Areas(id_area) ON DELETE SET NULL,
     apellido VARCHAR(100) NOT NULL,
-    genero VARCHAR(10),
-    estado_civil VARCHAR(20),
+    genero VARCHAR(10) CHECK (genero IN ('masculino','femenino', 'otro')),
+    estado_civil VARCHAR(20) CHECK (estado_civil IN ('soltero','casado','divorciado','viudo','separado','comprometido')),
     fecha_nacimiento DATE,
     direccion VARCHAR(255),
     telefono VARCHAR(20),
-    linkedin VARCHAR(255)
+    linkedin VARCHAR(255),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Empresas (
     id_empresa SERIAL PRIMARY KEY,
-    fk_id_usuario INT REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    fk_id_usuario UUID REFERENCES Usuarios(id_usuario)  ON DELETE CASCADE,
     nombre VARCHAR(100) NOT NULL,
-    razon_social VARCHAR(100),
+    razon_social VARCHAR(150),
     descripcion TEXT,
     ruc VARCHAR(20) UNIQUE NOT NULL,
     vision TEXT,
@@ -71,14 +74,16 @@ CREATE TABLE Empresas (
     sector VARCHAR(100),
     direccion VARCHAR(255),
     telefono VARCHAR(20),
-    email VARCHAR(100) UNIQUE NOT NULL
+    email VARCHAR(100) UNIQUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Idiomas (
     id_idioma SERIAL PRIMARY KEY,
     fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
     nombre VARCHAR(100) NOT NULL,
-    nivel VARCHAR(50)
+    nivel VARCHAR(30) CHECK (nivel IN ('principiante','intermedio','avanzado','nativo')) DEFAULT 'principiante'
 );
 
 CREATE TABLE Experiencias (
@@ -88,7 +93,7 @@ CREATE TABLE Experiencias (
     descripcion TEXT,
     fecha_inicio DATE,
     fecha_fin DATE,
-    estado VARCHAR(50)
+    estado VARCHAR(30) CHECK (estado IN ('cursando','finalizado')) DEFAULT 'cursando'
 );
 
 CREATE TABLE Estudios (
@@ -97,7 +102,7 @@ CREATE TABLE Estudios (
     fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    estado VARCHAR(50)
+    estado VARCHAR(30) CHECK (estado IN ('cursando','finalizado')) DEFAULT 'cursando'
 );
 
 CREATE TABLE Comentarios (
@@ -105,8 +110,10 @@ CREATE TABLE Comentarios (
     fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
     fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
     descripcion TEXT,
-    puntaje INT CHECK (puntaje BETWEEN 1 AND 5),
-    estado VARCHAR(50)
+    puntaje SMALLINT CHECK (puntaje BETWEEN 1 AND 5),
+    estado VARCHAR(30) CHECK (estado IN ('no leido','leido')) DEFAULT 'no leido',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Anuncios (
@@ -124,7 +131,6 @@ CREATE TABLE Anuncios (
     beneficios TEXT,
     direccion VARCHAR(255),
     fecha_entrevista DATE,
-    fecha_publicacion DATE,
     tipo_contrato VARCHAR(50),
     modalidad VARCHAR(50),
     jornada_laboral VARCHAR(50),
@@ -135,7 +141,9 @@ CREATE TABLE Anuncios (
     edad_maxima INT,
     experiencia_anios INT,
     estudio VARCHAR(100),
-    discapacitados BOOLEAN
+    discapacitados BOOLEAN,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Postulaciones (
@@ -143,8 +151,9 @@ CREATE TABLE Postulaciones (
     fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
     fk_id_empresa INT REFERENCES Empresas(id_empresa) ON DELETE CASCADE,
     fk_id_anuncio INT REFERENCES Anuncios(id_anuncio) ON DELETE CASCADE,
-    estado VARCHAR(50),
-    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    estado VARCHAR(30) CHECK (estado IN ('pendiente','preseleccionado','aceptado','rechazado')) DEFAULT 'pendiente',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Notificaciones (
@@ -153,7 +162,45 @@ CREATE TABLE Notificaciones (
     fk_id_candidato INT REFERENCES Candidatos(id_candidato) ON DELETE CASCADE,
     titulo VARCHAR(100),
     descripcion TEXT,
-    estado_publicacion VARCHAR(50),
-    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    estado VARCHAR(30) CHECK (estado IN ('no leido','leido')) DEFAULT 'no leido',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Crear función para actualizar fecha de actualización
+CREATE OR REPLACE FUNCTION update_fecha_actualizacion()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.fecha_actualizacion = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear triggers para las tablas que tienen fecha_actualizacion
+CREATE TRIGGER trigger_usuarios
+BEFORE UPDATE ON Usuarios
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_candidatos
+BEFORE UPDATE ON Candidatos
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_empresas
+BEFORE UPDATE ON Empresas
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_comentarios
+BEFORE UPDATE ON Comentarios
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_anuncios
+BEFORE UPDATE ON Anuncios
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_postulaciones
+BEFORE UPDATE ON Postulaciones
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();
+
+CREATE TRIGGER trigger_notificaciones
+BEFORE UPDATE ON Notificaciones
+FOR EACH ROW EXECUTE FUNCTION update_fecha_actualizacion();

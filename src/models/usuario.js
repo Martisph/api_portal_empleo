@@ -90,13 +90,15 @@ export class Usuario {
 
   static async existsEmail ({ data }) {
     try {
-      const email = await pool.query(
-        'SELECT email FROM Usuarios WHERE email = $1',
+      const { rowCount } = await pool.query(
+        'SELECT * FROM Usuarios WHERE email = $1',
         [data.email]
       )
-      return email
+      console.log(rowCount)
+      if (rowCount) return true
+      return false
     } catch (e) {
-      return { message: 'error' }
+      return { message: e.message }
     }
   }
 

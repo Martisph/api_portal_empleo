@@ -26,6 +26,7 @@ export const postUsuario = async (req, res) => {
   try {
     const data = validateUsuario(req.body)
     const email = await Usuario.existsEmail(data)
+    console.log(email)
     if (email) return res.status(400).json({ message: ' Email ya existe ' })
     const usuario = await Usuario.postUsuario(data)
     return res.status(200).json(usuario)

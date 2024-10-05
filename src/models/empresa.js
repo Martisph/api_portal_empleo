@@ -15,7 +15,7 @@ export class Empresa {
   static async getEmpresa ({ id }) {
     try {
       const { rows } = await pool.query(
-        'SELECT * FROM Empresas WHERE id_empresa = $1',
+        'SELECT * FROM Empresas e JOIN Usuarios u ON e.fk_id_usuario = u.id_usuario WHERE id_empresa = $1',
         [id]
       )
       return rows[0]
@@ -28,9 +28,10 @@ export class Empresa {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Empresas
-        (nombre, razon_social, descripcion, ruc, vision, mision, valores, sector, direccion, telefono, email)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+        (fk_id_usuario, nombre, razon_social, descripcion, ruc, vision, mision, valores, sector, direccion, telefono, email)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
         [
+          data.fk_id_usuario,
           data.nombre,
           data.razon_social,
           data.descripcion,

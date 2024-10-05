@@ -4,7 +4,7 @@ import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerPostulaciones = Router()
 
-routerPostulaciones.get('/', userSesionMiddleware, getPostulaciones)
+routerPostulaciones.get('/', getPostulaciones) // agregar despues de las pruebas
 
 routerPostulaciones.get('/:id', userSesionMiddleware, getPostulacion)
 
