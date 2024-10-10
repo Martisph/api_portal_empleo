@@ -9,7 +9,9 @@ export class Usuario {
 
   static async getUsuarios () {
     try {
-      const { rows } = await pool.query('SELECT id_usuario, nombre, email FROM Usuarios')
+      const { rows } = await pool.query(
+        'SELECT id_usuario, nombre, email FROM Usuarios'
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error ' + e.message)

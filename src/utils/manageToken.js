@@ -26,6 +26,6 @@ export const generateRefreshToken = (_id, name, res) => {
       maxAge: expiresIn * 1000
     })
   } catch (e) {
-    return '{ message: e }'
+    return { message: e }
   }
 }

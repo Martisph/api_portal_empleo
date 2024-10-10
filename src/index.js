@@ -20,6 +20,7 @@ import {
 } from './routes/index.js'
 import { PORT } from './config.js'
 import { requireRefreshToken } from './middlewares/requiredToken.js'
+import { corsMiddleware } from './middlewares/cors.js'
 
 const app = express()
 
@@ -28,6 +29,7 @@ app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
 app.use(cookieParser())
 app.use(requireRefreshToken)
+app.use(corsMiddleware())
 
 app.get('/', (req, res) => {
   const { user } = req.session
