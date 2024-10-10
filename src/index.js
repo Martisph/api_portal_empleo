@@ -28,8 +28,8 @@ app.set('view engine', 'ejs')
 app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
 app.use(cookieParser())
-app.use(requireRefreshToken)
 app.use(corsMiddleware())
+app.use(requireRefreshToken)
 
 app.get('/', (req, res) => {
   const { user } = req.session
