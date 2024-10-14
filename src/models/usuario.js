@@ -101,7 +101,6 @@ export class Usuario {
         'SELECT * FROM Usuarios WHERE email = $1',
         [data.email]
       )
-      console.log(rowCount)
       if (rowCount) return true
       return false
     } catch (e) {
