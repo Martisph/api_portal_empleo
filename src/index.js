@@ -41,7 +41,10 @@ app.get('/protected', (req, res) => {
   if (!user) return res.status(403).send('Access not Autorized')
   res.render('protected', user)
 })
-
+app.post('/prueba', (req, res) => {
+  console.log(req.body)
+  res.status(200).json({ message: 'datos registrados con exit' })
+})
 app.use('/anuncio', routerAnuncios) // Anuncio
 app.use('/area', routerAreas) // Area
 app.use('/sesion', routerSesion) // sesion

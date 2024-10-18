@@ -124,7 +124,7 @@ export class Usuario {
             email: valores.email
           }
         }
-        throw new Error(' Credenciales invalidos ')
+        throw new Error(' Contraseña incorrecto ')
       }
       throw new Error(' Usuario no existe ')
     } catch (e) {

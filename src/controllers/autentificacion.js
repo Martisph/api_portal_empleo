@@ -14,9 +14,9 @@ export async function auntentificacionController (req, res) {
       generateRefreshToken(login._id, login.nombre, res)
       return res.status(200).json({ token, expiresIn })
     }
-    return res.status(500).json({ message: ' Internal error ' })
+    return res.status(401).json({ message: ' Credenciales invalidas ' })
   } catch (e) {
-    return res.status(500).json({ message: e.message })
+    return res.status(400).json({ message: e.message })
   }
 }
 
@@ -30,7 +30,7 @@ export async function logoutController (req, res) {
 
 export const refreshToken = (req, res) => {
   try {
-    const refreshTokenCookie = req.cookies.access_token
+    const refreshTokenCookie = req.cookies.access_token_refresh
     if (!refreshTokenCookie) throw new Error('No Bearer')
     const { id, name } = jwt.verify(refreshToken, SECRET_JWS_KEY_REFRESH)
     const { token, expiresIn } = generateToken(id, name)
