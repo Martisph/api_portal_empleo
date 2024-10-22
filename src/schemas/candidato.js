@@ -1,7 +1,7 @@
 import z from 'zod'
 
 const candidatoSchema = z.object({
-  fk_id_area: z.number(),
+  area: z.number(),
   apellido: z.string(),
   genero: z.enum([
     'masculino',

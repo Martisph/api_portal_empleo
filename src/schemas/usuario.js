@@ -1,7 +1,7 @@
 import z from 'zod'
 
 const usuarioSchema = z.object({
-  fk_id_ubicacion: z.number(),
+  ubicacion: z.number(),
   nombre: z.string(),
   email: z.string().email(),
   contrasena: z.string(),

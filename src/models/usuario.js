@@ -43,7 +43,7 @@ export class Usuario {
                 (fk_id_ubicacion, nombre, email, contrasena, rol)
                 VALUES($1, $2, $3, $4, $5) RETURNING *`,
         [
-          data.fk_id_ubicacion,
+          data.ubicacion,
           data.nombre,
           data.email,
           hashedpass,
@@ -81,7 +81,7 @@ export class Usuario {
               rol = $5
               WHERE id_usuario = $6 RETURNING *`,
         [
-          data.fk_id_ubicacion,
+          data.ubicacion,
           data.nombre,
           data.email,
           hashedpass,

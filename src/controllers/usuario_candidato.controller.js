@@ -6,6 +6,7 @@ import { validateCandidato } from '../schemas/candidato.js'
 
 export const postUsuario = async (req, res) => {
   try {
+    console.log(req.body)
     const dataUsuario = validateUsuario(req.body)
     const dataCandidato = validateCandidato(req.body)
     if (dataUsuario.success && dataCandidato.success) {
@@ -17,16 +18,13 @@ export const postUsuario = async (req, res) => {
     }
 
     await pool.query('BEGIN')
-
     const usuario = await Usuario.postUsuario(dataUsuario)
     const candidato = await Candidato.postCandidato(usuario, dataCandidato)
-    await pool.query('COMMIT')
-    console.log(usuario, candidato)
 
+    await pool.query('COMMIT')
     return res.status(200).json({ ...usuario, ...candidato })
   } catch (e) {
     await pool.query('ROLLBACK')
-    console.log(e)
     return res.status(500).json({ error: e.message })
   }
 }

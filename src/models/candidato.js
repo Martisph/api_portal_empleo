@@ -35,7 +35,7 @@ export class Candidato {
               VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [
           id_usuario,
-          data.fk_id_area,
+          data.area,
           data.apellido,
           data.genero,
           data.estado_civil,
@@ -68,19 +68,17 @@ export class Candidato {
     try {
       const { rows } = await pool.query(
         `UPDATE Candidatos SET
-          fk_id_usuario = $1,
-          fk_id_area = $2,
-          apellido = $3,
-          genero = $4,
-          estado_civil = $5,
-          fecha_nacimiento = $6,
-          direccion = $7,
-          telefono = $8,
-          linkedin = $9
-          WHERE id_candidato = $10 RETURNING *`,
+          fk_id_area = $1,
+          apellido = $2,
+          genero = $3,
+          estado_civil = $4,
+          fecha_nacimiento = $5,
+          direccion = $6,
+          telefono = $7,
+          linkedin = $8
+          WHERE id_candidato = $9 RETURNING *`,
         [
-          data.fk_id_usuario,
-          data.fk_id_area,
+          data.area,
           data.apellido,
           data.genero,
           data.estado_civil,
