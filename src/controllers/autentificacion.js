@@ -10,9 +10,11 @@ export async function auntentificacionController (req, res) {
     const user = await new Usuario(data)
     const login = await user.loginUsuario()
     if (login) {
-      const { token, expiresIn } = generateToken(login._id, login.nombre)
+      const { token } = generateToken(login._id, login.nombre)
       generateRefreshToken(login._id, login.nombre, res)
-      return res.status(200).json({ token, expiresIn })
+      return res
+        .status(200)
+        .json({ token, email: login.email, nombre: login.nombre })
     }
     return res.status(401).json({ message: ' Credenciales invalidas ' })
   } catch (e) {

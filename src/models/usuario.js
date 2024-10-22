@@ -98,7 +98,7 @@ export class Usuario {
   static async existsEmail ({ data }) {
     try {
       const { rowCount } = await pool.query(
-        'SELECT * FROM Usuarios WHERE email = $1',
+        'SELECT email FROM Usuarios WHERE email = $1',
         [data.email]
       )
       if (rowCount) return true

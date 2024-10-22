@@ -22,6 +22,7 @@ export const generateRefreshToken = (_id, name, res) => {
     res.cookie('access_token_refresh', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      path: '/',
       sameSite: 'strict',
       maxAge: expiresIn * 1000
     })

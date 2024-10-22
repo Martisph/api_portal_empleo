@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken'
-import { SECRET_JWS_KEY_REFRESH } from '../config.js'
+import { SECRET_JWS_KEY, SECRET_JWS_KEY_REFRESH } from '../config.js'
 
 export const requireToken = (req, res, next) => {
   try {
     const headerToken = req.headers?.authorization
     const token = headerToken && headerToken.split(' ')[1]
     if (!token) throw new Error('No Bearer')
-    const { id } = jwt.verify(token, SECRET_JWS_KEY_REFRESH)
+    const { id } = jwt.verify(token, SECRET_JWS_KEY)
     req.id = id // asigna el id a la variable req.id misntras esta en ejecucion
     next()
   } catch (e) {

@@ -1,5 +1,5 @@
 import { Usuario } from '../models/usuario.js'
-import { validateUsuario } from '../schemas/usuario.js'
+import { validateUsuario, validateEmailUsuario } from '../schemas/usuario.js'
 
 export const getUsuarios = async (req, res) => {
   try {
@@ -25,9 +25,13 @@ export const getUsuario = async (req, res) => {
 export const postUsuario = async (req, res) => {
   try {
     const data = validateUsuario(req.body)
-    const email = await Usuario.existsEmail(data)
+    console.log(data)
+    const email = await Usuario.existsEmail(validateEmailUsuario(req.body))
     if (email) return res.status(400).json({ message: ' Email ya existe ' })
     const usuario = await Usuario.postUsuario(data)
+    console.log(usuario)
+    console.log('este es el id del usuario')
+    console.log(usuario.id_usuario)
     return res.status(200).json(usuario)
   } catch (e) {
     return res.status(500).json({ message: e.message })

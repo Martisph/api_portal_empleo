@@ -41,7 +41,7 @@ CREATE TABLE Usuarios (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
-    rol VARCHAR(50) CHECK (rol IN ('candidato','empresa')),
+    rol VARCHAR(50) CHECK (rol IN ('candidato','empresa', 'administrador')) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -53,7 +53,7 @@ CREATE TABLE Candidatos (
     apellido VARCHAR(100) NOT NULL,
     genero VARCHAR(10) CHECK (genero IN ('masculino','femenino', 'otro')),
     estado_civil VARCHAR(20) CHECK (estado_civil IN ('soltero','casado','divorciado','viudo','separado','comprometido')),
-    fecha_nacimiento DATE,
+    fecha_nacimiento DATE NOT NULL,
     direccion VARCHAR(255),
     telefono VARCHAR(20),
     linkedin VARCHAR(255),

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { pool } from '../database/db.js'
 
 export class Candidato {
@@ -26,15 +27,14 @@ export class Candidato {
     }
   }
 
-  static async postCandidato ({ data }) {
+  static async postCandidato ({ id_usuario }, { data }) {
     try {
-      console.log(data.fk_id_usuario)
       const { rows } = await pool.query(
         `INSERT INTO Candidatos
               (fk_id_usuario, fk_id_area, apellido, genero, estado_civil, fecha_nacimiento, direccion, telefono, linkedin)
               VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [
-          data.fk_id_usuario,
+          id_usuario,
           data.fk_id_area,
           data.apellido,
           data.genero,
