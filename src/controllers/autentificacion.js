@@ -16,9 +16,9 @@ export async function auntentificacionController (req, res) {
         .status(200)
         .json({ token, email: login.email, nombre: login.nombre })
     }
-    return res.status(401).json({ message: ' Credenciales invalidas ' })
+    return res.status(401).json({ error: ' Credenciales invalidas ' })
   } catch (e) {
-    return res.status(400).json({ message: e.message })
+    return res.status(400).json({ error: e.message })
   }
 }
 
@@ -26,7 +26,7 @@ export async function logoutController (req, res) {
   try {
     return res.clearCookie('access_token_refresh').status(200).json({ message: 'Logout succesful' })
   } catch (e) {
-    return res.status(401).json({ message: e })
+    return res.status(401).json({ error: e })
   }
 }
 
@@ -38,6 +38,6 @@ export const refreshToken = (req, res) => {
     const { token, expiresIn } = generateToken(id, name)
     return res.status(200).json({ token, expiresIn })
   } catch (e) {
-    return res.status(401).json({ message: e })
+    return res.status(401).json({ error: e })
   }
 }

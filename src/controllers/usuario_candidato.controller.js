@@ -16,7 +16,7 @@ export const postUsuario = async (req, res) => {
     } else {
       return res.status(400).json({ error: ' Ingreso de datos erroneos ' })
     }
-
+    console.log('pasando los filtros de registro de usuario')
     await pool.query('BEGIN')
     const usuario = await Usuario.postUsuario(dataUsuario)
     const candidato = await Candidato.postCandidato(usuario, dataCandidato)

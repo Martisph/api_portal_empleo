@@ -1,7 +1,6 @@
 import z from 'zod'
 
 const empresaSchema = z.object({
-  fk_id_usuario: z.string(),
   nombre: z.string(),
   razon_social: z.string(),
   descripcion: z.string().optional(),
