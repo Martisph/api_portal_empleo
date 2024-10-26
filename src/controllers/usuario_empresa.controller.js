@@ -8,9 +8,10 @@ export const postUsuario = async (req, res) => {
   try {
     console.log(req.body)
     const dataUsuario = validateUsuario(req.body)
-    const dataEmpresa = validateEmpresa(req.body)
+    const { nombre: nombreUsuario, emailEmpresa: email, nombreEmpresa: nombre, ...otro } = req.body
+    const data = { ...otro, email, nombre }
+    const dataEmpresa = validateEmpresa(data)
     if (dataUsuario.success && dataEmpresa.success) {
-      console.log(dataUsuario)
       const email = await Usuario.existsEmail(validateEmailUsuario(req.body))
       if (email) return res.status(401).json({ error: ' Email ya existe ' })
     } else {

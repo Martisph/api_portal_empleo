@@ -74,7 +74,7 @@ CREATE TABLE Empresas (
     sector VARCHAR(100),
     direccion VARCHAR(255),
     telefono VARCHAR(20),
-    email VARCHAR(100) UNIQUE,
+    email VARCHAR(100),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

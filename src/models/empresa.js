@@ -29,7 +29,7 @@ export class Empresa {
     try {
       const { rows } = await pool.query(
         `INSERT INTO Empresas
-        (nombre, razon_social, descripcion, ruc, vision, mision, valores, sector, direccion, telefono, email)
+        (fk_id_usuario, nombre, razon_social, descripcion, ruc, vision, mision, valores, sector, direccion, telefono, email)
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
         [
           id_usuario,
