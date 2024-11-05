@@ -1,7 +1,28 @@
 import { pool } from '../database/db.js'
 
+function cleanParams (id) {
+  const clean = id
+    .split('empleos-de-')
+    .join('')
+    .split('empleos-en-')
+    .join('')
+    .split('-en-')
+    .join('.')
+    .split('-')
+    .join(' ')
+  const ruta = clean.split('.')
+  const ubicacion = ruta.length === 2 ? ruta[1] : id.startsWith('empleos-en-') ? ruta[0] : ''
+  const area =
+    ruta.length === 2
+      ? ruta[0]
+      : id.startsWith('empleos-de-')
+        ? ruta[0].split('-').join(' ')
+        : ''
+  return { area, ubicacion }
+}
+
 export class Anuncio {
-  static async getAnuncios () {
+  static async getAllAnuncios () {
     try {
       const { rows } = await pool.query(
         `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
@@ -10,7 +31,7 @@ export class Anuncio {
           FROM Anuncios anun 
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
-        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_creacion DESC LIMIT 5`
+        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_creacion DESC LIMIT 5 OFFSET 5`
       )
       return rows
     } catch (e) {
@@ -18,7 +39,38 @@ export class Anuncio {
     }
   }
 
-  static async getAnuncio ({ id }) {
+  static async getAnuncioByParams ({ params }) {
+    const { area, ubicacion } = cleanParams(params)
+
+    let baseQuery = `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
+          are.nombre AS area, anun.titulo, anun.descripcion,
+          anun.direccion, anun.discapacitados
+          FROM Anuncios anun  
+        JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
+        JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
+        JOIN Areas are ON anun.fk_id_area = are.id_area
+        WHERE 1=1`
+
+    const queryParams = []
+
+    if (area) {
+      baseQuery += ` AND LOWER(are.nombre) = LOWER($${queryParams.length + 1})`
+      queryParams.push(area)
+    }
+    if (ubicacion) {
+      baseQuery += ` AND LOWER(ubic.nombre) = LOWER($${queryParams.length + 1})`
+      queryParams.push(ubicacion)
+    }
+
+    try {
+      const { rows } = await pool.query(baseQuery, queryParams)
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ')
+    }
+  }
+
+  static async getAnuncioById ({ id }) {
     try {
       const { rows } = await pool.query(
         `SELECT emp.nombre AS empresa, ubic.nombre AS ubicacion, are.nombre AS area,

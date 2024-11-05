@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { getAnuncio, getAnuncios, postAnuncio, deleteAnuncio, putAnuncio } from '../controllers/anuncio.controller.js'
+import { getAnuncio, getAllAnuncios, postAnuncio, deleteAnuncio, putAnuncio, getAnuncioParams } from '../controllers/anuncio.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerAnuncios = Router()
 
-routerAnuncios.get('/', getAnuncios)
+routerAnuncios.get('/', getAllAnuncios)
+
+routerAnuncios.get('/params/:params', getAnuncioParams)
 
 routerAnuncios.get('/:id', getAnuncio)
 
