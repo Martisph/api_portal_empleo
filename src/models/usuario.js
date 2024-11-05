@@ -111,7 +111,7 @@ export class Usuario {
   async loginUsuario () {
     try {
       const { rows } = await pool.query(
-        'SELECT id_usuario, nombre, email, contrasena FROM Usuarios WHERE email = $1',
+        'SELECT id_usuario, nombre, email, contrasena, rol FROM Usuarios WHERE email = $1',
         [this.email]
       )
       if (rows[0]) {
@@ -121,7 +121,8 @@ export class Usuario {
           return {
             _id: valores.id_usuario,
             nombre: valores.nombre,
-            email: valores.email
+            email: valores.email,
+            profile: valores.rol
           }
         }
         throw new Error(' Contraseña incorrecto ')

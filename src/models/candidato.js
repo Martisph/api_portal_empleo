@@ -18,7 +18,7 @@ export class Candidato {
          u.id_usuario, u.fk_id_ubicacion, u.nombre, u.email,
          c.apellido, c.genero, c.estado_civil, c.fecha_nacimiento, c.direccion, c.telefono, c.linkedin
          FROM Candidatos c JOIN Usuarios u ON c.fk_id_usuario = u.id_usuario
-         WHERE c.id_candidato = $1`,
+         WHERE c.fk_id_usuario = $1`,
         [id]
       )
       return rows[0]

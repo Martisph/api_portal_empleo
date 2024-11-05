@@ -14,7 +14,7 @@ export async function auntentificacionController (req, res) {
       generateRefreshToken(login._id, login.nombre, res)
       return res
         .status(200)
-        .json({ token, email: login.email, nombre: login.nombre })
+        .json({ token, _id: login._id, email: login.email, nombre: login.nombre, profile: login.profile })
     }
     return res.status(401).json({ error: ' Credenciales invalidas ' })
   } catch (e) {

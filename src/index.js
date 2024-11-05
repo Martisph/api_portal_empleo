@@ -21,7 +21,7 @@ import {
 import { PORT } from './config.js'
 import { requireRefreshToken } from './middlewares/requiredToken.js'
 import { corsMiddleware } from './middlewares/cors.js'
-import { postUsuario } from './controllers/usuario_candidato.controller.js'
+
 const app = express()
 
 app.set('view engine', 'ejs')
@@ -30,12 +30,6 @@ app.use(express.json()) // Middelware para filtrar datos json
 app.use(cookieParser())
 app.use(corsMiddleware())
 app.use(requireRefreshToken)
-
-app.get('/', (req, res) => {
-  const { user } = req.session
-  res.render('index', user)
-})
-app.post('/prueba', postUsuario)
 
 app.use('/anuncio', routerAnuncios) // Anuncio
 app.use('/area', routerAreas) // Area

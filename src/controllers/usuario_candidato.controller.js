@@ -4,7 +4,7 @@ import { pool } from '../database/db.js'
 import { validateUsuario, validateEmailUsuario } from '../schemas/usuario.js'
 import { validateCandidato } from '../schemas/candidato.js'
 
-export const postUsuario = async (req, res) => {
+export const postUsuarioC = async (req, res) => {
   try {
     console.log(req.body)
     const dataUsuario = validateUsuario(req.body)
@@ -28,7 +28,7 @@ export const postUsuario = async (req, res) => {
   }
 }
 
-export const deleteUsuario = async (req, res) => {
+export const deleteUsuarioC = async (req, res) => {
   try {
     const usuario = await Usuario.deleteUsuario(req.params)
     if (usuario) {
@@ -40,7 +40,7 @@ export const deleteUsuario = async (req, res) => {
   }
 }
 
-export const putUsuario = async (req, res) => {
+export const putUsuarioC = async (req, res) => {
   try {
     const data = validateUsuario(req.body)
     const usuario = await Usuario.putUsuario(req.params, data)
