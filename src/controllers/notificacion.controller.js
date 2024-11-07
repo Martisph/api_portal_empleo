@@ -10,6 +10,17 @@ export const getNotificaciones = async (req, res) => {
   }
 }
 
+export const getNotificacionAll = async (req, res) => {
+  try {
+    const notificacion = await Notificacion.getNotificacionAll(req.params)
+    if (!notificacion) {
+      return res.status(404).json({ message: ' Notificacion no encontrado ' })
+    }
+    return res.status(200).json(notificacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
 export const getNotificacion = async (req, res) => {
   try {
     const notificacion = await Notificacion.getNotificacion(req.params)

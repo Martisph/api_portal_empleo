@@ -10,6 +10,18 @@ export const getExperiencias = async (req, res) => {
   }
 }
 
+export const getExperienciaAllById = async (req, res) => {
+  try {
+    const experiencia = await Experiencia.getExperienciaAllById(req.params)
+    if (!experiencia) {
+      return res.status(404).json({ message: ' Experiencia laboral no encontrado ' })
+    }
+    return res.status(200).json(experiencia)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getExperiencia = async (req, res) => {
   try {
     const experiencia = await Experiencia.getExperiencia(req.params)

@@ -10,6 +10,22 @@ export class Experiencia {
     }
   }
 
+  static async getExperienciaAllById ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT exp.id_experiencia, exp.titulo, exp.descripcion, exp.fecha_inicio AS inicio, exp.fecha_fin AS fin
+        FROM Experiencias exp
+        JOIN Candidatos cand ON exp.fk_id_candidato = cand.id_candidato
+        JOIN Usuarios us ON cand.fk_id_usuario = us.id_usuario
+        WHERE cand.fk_id_usuario =$1`,
+        [id]
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error' + e.message)
+    }
+  }
+
   static async getExperiencia ({ id }) {
     try {
       const { rows } = await pool.query(

@@ -10,6 +10,18 @@ export const getIdiomas = async (req, res) => {
   }
 }
 
+export const getIdiomaAllById = async (req, res) => {
+  try {
+    const idioma = await Idioma.getIdiomaAllById(req.params)
+    if (!idioma) {
+      return res.status(404).json({ message: ' Idioma no encontrado ' })
+    }
+    return res.status(200).json(idioma)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getIdioma = async (req, res) => {
   try {
     const idioma = await Idioma.getIdioma(req.params)

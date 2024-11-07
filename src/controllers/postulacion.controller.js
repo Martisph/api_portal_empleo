@@ -10,6 +10,18 @@ export const getPostulaciones = async (req, res) => {
   }
 }
 
+export const getPostulacionBYCandidato = async (req, res) => {
+  try {
+    const postulacion = await Postulacion.getPostulacionByCandidato(req.params)
+    if (!postulacion) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
+    }
+    return res.status(200).json(postulacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getPostulacion = async (req, res) => {
   try {
     const postulacion = await Postulacion.getPostulacion(req.params)

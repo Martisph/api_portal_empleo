@@ -10,6 +10,18 @@ export const getEstudios = async (req, res) => {
   }
 }
 
+export const getEstudioAllById = async (req, res) => {
+  try {
+    const estudio = await Estudio.getEstudioAllById(req.params)
+    if (!estudio) {
+      return res.status(404).json({ message: ' Estudio no encontrado ' })
+    }
+    return res.status(200).json(estudio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getEstudio = async (req, res) => {
   try {
     const estudio = await Estudio.getEstudio(req.params)

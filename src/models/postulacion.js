@@ -15,6 +15,24 @@ export class Postulacion {
     }
   }
 
+  static async getPostulacionByCandidato ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT emp.razon_social AS empresa, anun.titulo, post.fecha_creacion AS fecha,
+          anun.descripcion
+          FROM Postulaciones post 
+          JOIN Candidatos cand ON post.fk_id_candidato = cand.id_candidato
+          JOIN Empresas emp ON post.fk_id_empresa = emp.id_empresa
+          JOIN Anuncios anun ON post.fk_id_anuncio = anun.id_anuncio
+          WHERE cand.fk_id_usuario = $1 ORDER BY post.fecha_creacion DESC`,
+        [id]
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
+    }
+  }
+
   static async getPostulacion ({ id }) {
     try {
       const { rows } = await pool.query(

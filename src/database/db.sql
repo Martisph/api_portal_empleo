@@ -123,7 +123,7 @@ CREATE TABLE Anuncios (
     fk_id_area INT REFERENCES Areas(id_area) ON DELETE SET NULL,
     fk_id_categoria_estudio INT REFERENCES Categoria_Estudios(id_categoria_estudio) ON DELETE SET NULL,
     titulo VARCHAR(100) NOT NULL,
-    descripcion TEXT,
+    descripcion TEXT NOT NULL,
     funciones TEXT,
     requisitos TEXT,
     habilidades TEXT,

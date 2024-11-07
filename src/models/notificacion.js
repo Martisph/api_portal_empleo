@@ -4,7 +4,7 @@ export class Notificacion {
   static async getNotificaciones () {
     try {
       const { rows } = await pool.query(
-        `SELECT noti.id_notificacion, emp.nombre,
+        `SELECT noti.id_notificacion, emp.nombre AS empresa,
           noti.titulo, noti.estado
           FROM Notificaciones noti
           JOIN Empresas emp ON noti.fk_id_empresa = emp.id_empresa`
@@ -15,10 +15,27 @@ export class Notificacion {
     }
   }
 
+  static async getNotificacionAll ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT noti.id_notificacion, emp.nombre AS empresa, cand.apellido AS usuario,
+          noti.titulo, noti.descripcion, noti.estado, noti.fecha_creacion
+          FROM Notificaciones noti
+          JOIN Empresas emp ON noti.fk_id_empresa = emp.id_empresa
+          JOIN Candidatos cand ON noti.fk_id_candidato = cand.id_candidato
+          WHERE cand.fk_id_usuario = $1`,
+        [id]
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
+    }
+  }
+
   static async getNotificacion ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT emp.nombre, cand.apellido,
+        `SELECT emp.nombre AS empresa, cand.apellido AS usuario,
           noti.titulo, noti.descripcion, noti.estado, noti.fecha_creacion
           FROM Notificaciones noti
           JOIN Empresas emp ON noti.fk_id_empresa = emp.id_empresa

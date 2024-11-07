@@ -1,10 +1,19 @@
 import { Router } from 'express'
-import { deleteEstudio, getEstudio, getEstudios, postEstudio, putEstudio } from '../controllers/estudio.controller.js'
+import {
+  deleteEstudio,
+  getEstudio,
+  getEstudioAllById,
+  getEstudios,
+  postEstudio,
+  putEstudio
+} from '../controllers/estudio.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerEstudios = Router()
 
 routerEstudios.get('/', getEstudios)
+
+routerEstudios.get('/all/:id', getEstudioAllById)
 
 routerEstudios.get('/:id', getEstudio)
 

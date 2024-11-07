@@ -12,6 +12,21 @@ export class Estudio {
     }
   }
 
+  static async getEstudioAllById ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT est.id_estudio, est.titulo, est.descripcion FROM Estudios est
+        JOIN Candidatos cand ON est.fk_id_candidato = cand.id_candidato
+        JOIN Usuarios us ON cand.fk_id_usuario = us.id_usuario
+        WHERE cand.fk_id_usuario =$1`,
+        [id]
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
+    }
+  }
+
   static async getEstudio ({ id }) {
     try {
       const { rows } = await pool.query(

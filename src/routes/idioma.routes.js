@@ -1,10 +1,19 @@
 import { Router } from 'express'
-import { deleteIdioma, getIdioma, getIdiomas, postIdioma, putIdioma } from '../controllers/idioma.controller.js'
+import {
+  deleteIdioma,
+  getIdioma,
+  getIdiomaAllById,
+  getIdiomas,
+  postIdioma,
+  putIdioma
+} from '../controllers/idioma.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerIdiomas = Router()
 
 routerIdiomas.get('/', getIdiomas)
+
+routerIdiomas.get('/all/:id', getIdiomaAllById)
 
 routerIdiomas.get('/:id', getIdioma)
 
