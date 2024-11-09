@@ -2,7 +2,8 @@ import { Router } from 'express'
 import {
   deletePostulacion,
   getPostulacion,
-  getPostulacionBYCandidato,
+  getPostulacionByEmpresa,
+  getPostulacionByCandidato,
   getPostulaciones,
   postPostulacion,
   putPostulacion
@@ -13,7 +14,9 @@ export const routerPostulaciones = Router()
 
 routerPostulaciones.get('/', getPostulaciones) // agregar despues de las pruebas
 
-routerPostulaciones.get('/posit/:id', userSesionMiddleware, getPostulacionBYCandidato)
+routerPostulaciones.get('/posit-empresa/:id', userSesionMiddleware, getPostulacionByEmpresa)
+
+routerPostulaciones.get('/posit-candidato/:id', userSesionMiddleware, getPostulacionByCandidato)
 
 routerPostulaciones.get('/:id', userSesionMiddleware, getPostulacion)
 

@@ -4,7 +4,12 @@ const postulacionSchema = z.object({
   fk_id_candidato: z.number(),
   fk_id_empresa: z.number(),
   fk_id_anuncio: z.number(),
-  estado: z.string()
+  estado: z.enum([
+    'pendiente',
+    'preseleccionado',
+    'aceptado',
+    'rechazado'
+  ]).default('pendiente')
 })
 
 export function validatePostulacion (object) {

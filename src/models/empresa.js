@@ -13,6 +13,20 @@ export class Empresa {
     }
   }
 
+  static async getEmpresaBasicInfo ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT id_empresa, nombre, razon_social, ruc, telefono, email
+        FROM Empresas
+        WHERE fk_id_usuario = $1`,
+        [id]
+      )
+      return rows[0]
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
+    }
+  }
+
   static async getEmpresa ({ id }) {
     try {
       const { rows } = await pool.query(

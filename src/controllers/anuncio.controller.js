@@ -10,9 +10,21 @@ export const getAllAnuncios = async (req, res) => {
   }
 }
 
-export const getAnuncioParams = async (req, res) => {
+export const getAnuncioByParams = async (req, res) => {
   try {
     const anuncio = await Anuncio.getAnuncioByParams(req.params)
+    if (!anuncio) {
+      return res.status(404).json({ message: ' Anuncio no encontrado ' })
+    }
+    return res.status(200).json(anuncio)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const getAnuncioByDash = async (req, res) => {
+  try {
+    const anuncio = await Anuncio.getAnuncioByIdDash(req.params)
     if (!anuncio) {
       return res.status(404).json({ message: ' Anuncio no encontrado ' })
     }

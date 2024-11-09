@@ -12,6 +12,23 @@ export class Comentario {
     }
   }
 
+  static async getComentarioByEmpresa ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT com.descripcion, com.puntaje,
+        com.fecha_actualizacion AS fecha, cand.apellido
+        FROM Comentarios com
+        JOIN Candidatos cand ON com.fk_id_candidato = cand.id_candidato
+        JOIN Empresas emp ON com.fk_id_empresa = emp.id_empresa
+        WHERE emp.fk_id_usuario = $1 ORDER BY com.fecha_actualizacion DESC LIMIT 10`,
+        [id]
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ' + e.message)
+    }
+  }
+
   static async getComentario ({ id }) {
     try {
       const { rows } = await pool.query(

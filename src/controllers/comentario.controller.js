@@ -10,6 +10,18 @@ export const getComentarios = async (req, res) => {
   }
 }
 
+export const getComentarioByEmpresa = async (req, res) => {
+  try {
+    const comentario = await Comentario.getComentarioByEmpresa(req.params)
+    if (!comentario) {
+      return res.status(404).json({ message: ' Comentario no encontrado ' })
+    }
+    return res.status(200).json(comentario)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getComentario = async (req, res) => {
   try {
     const comentario = await Comentario.getComentario(req.params)

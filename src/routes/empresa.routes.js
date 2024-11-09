@@ -1,10 +1,19 @@
 import { Router } from 'express'
-import { deleteEmpresa, getEmpresa, getEmpresas, postEmpresa, putEmpresa } from '../controllers/empresa.controller.js'
+import {
+  deleteEmpresa,
+  getEmpresa,
+  getEmpresaBasicInfo,
+  getEmpresas,
+  postEmpresa,
+  putEmpresa
+} from '../controllers/empresa.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerEmpresas = Router()
 
 routerEmpresas.get('/', getEmpresas)
+
+routerEmpresas.get('/basic-info/:id', getEmpresaBasicInfo)
 
 routerEmpresas.get('/:id', getEmpresa)
 

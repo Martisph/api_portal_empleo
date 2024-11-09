@@ -24,7 +24,7 @@ const anuncioScrema = z.object({
   edad_maxima: z.number().int(),
   experiencia_anios: z.number().int().default(0),
   estudio: z.string(),
-  discapacitados: z.boolean()
+  discapacitados: z.boolean().default(false)
 })
 
 export function validateAnuncio (object) {

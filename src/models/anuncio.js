@@ -27,11 +27,11 @@ export class Anuncio {
       const { rows } = await pool.query(
         `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
           are.nombre AS area, anun.titulo, anun.descripcion,
-          anun.direccion, anun.discapacitados
+          anun.direccion, anun.discapacitados, anun.fecha_actualizacion AS fecha
           FROM Anuncios anun 
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
-        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_creacion DESC LIMIT 5 OFFSET 5`
+        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_actualizacion DESC LIMIT 5 OFFSET 5`
       )
       return rows
     } catch (e) {
@@ -42,9 +42,9 @@ export class Anuncio {
   static async getAnuncioByParams ({ params }) {
     const { area, ubicacion } = cleanParams(params)
 
-    let baseQuery = `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
-          are.nombre AS area, anun.titulo, anun.descripcion,
-          anun.direccion, anun.discapacitados
+    let baseQuery = `SELECT emp.nombre AS empresa, are.nombre AS area, 
+          anun.id_anuncio, anun.direccion, ubic.nombre AS ubicacion,
+          anun.titulo, anun.descripcion, anun.estudio, anun.discapacitados
           FROM Anuncios anun  
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
@@ -63,7 +63,28 @@ export class Anuncio {
     }
 
     try {
-      const { rows } = await pool.query(baseQuery, queryParams)
+      baseQuery += ' ORDER BY anun.fecha_actualizacion DESC'
+      const { rows } = await pool.query(
+        baseQuery,
+        queryParams
+      )
+      return rows
+    } catch (e) {
+      throw new Error(' Internal error ')
+    }
+  }
+
+  static async getAnuncioByIdDash ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT com.descripcion, com.puntaje,
+      com.fecha_actualizacion AS fecha, cand.apellido
+      FROM Comentarios com
+      JOIN Candidatos cand ON com.fk_id_candidato = cand.id_candidato
+      JOIN Empresas emp ON com.fk_id_empresa = emp.id_empresa
+      WHERE emp.fk_id_usuario = $1 ORDER BY com.fecha_actualizacion DESC LIMIT 10`,
+        [id]
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error ')

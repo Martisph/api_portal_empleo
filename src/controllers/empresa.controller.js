@@ -10,6 +10,17 @@ export const getEmpresas = async (req, res) => {
   }
 }
 
+export const getEmpresaBasicInfo = async (req, res) => {
+  try {
+    const empresa = await Empresa.getEmpresaBasicInfo(req.params)
+    if (!empresa) {
+      return res.status(404).json({ message: ' Empresa no encontrado ' })
+    }
+    return res.status(200).json(empresa)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
 export const getEmpresa = async (req, res) => {
   try {
     const empresa = await Empresa.getEmpresa(req.params)

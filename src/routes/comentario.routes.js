@@ -4,7 +4,8 @@ import {
   getComentarios,
   getComentario,
   postComentario,
-  putComentario
+  putComentario,
+  getComentarioByEmpresa
 } from '../controllers/comentario.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
@@ -13,6 +14,8 @@ export const routerComentarios = Router()
 routerComentarios.get('/', getComentarios)
 
 routerComentarios.get('/:id', getComentario)
+
+routerComentarios.get('/empresa/:id', getComentarioByEmpresa)
 
 routerComentarios.post('/', userSesionMiddleware, postComentario)
 
