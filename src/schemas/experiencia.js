@@ -5,8 +5,8 @@ const experienciaSchema = z.object({
   titulo: z.string(),
   descripcion: z.string(),
   fecha_inicio: z.string().date(),
-  fecha_fin: z.string().date(),
-  estado: z.string()
+  fecha_fin: z.string().date().optional(),
+  estado: z.enum(['cursando', 'finalizado']).default('cursando')
 })
 
 export function validateExperiencia (object) {

@@ -3,7 +3,10 @@ import { pool } from '../database/db.js'
 export class CategoriaEstudio {
   static async getCategoriaEstudios () {
     try {
-      const { rows } = await pool.query('SELECT * FROM Categoria_Estudios')
+      const { rows } = await pool.query(
+        `SELECT id_categoria_estudio, nombre, descripcion 
+        FROM Categoria_Estudios`
+      )
       return rows
     } catch (e) {
       throw new Error(' Internal error ' + e.message)

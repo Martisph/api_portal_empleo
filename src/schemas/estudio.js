@@ -5,7 +5,7 @@ const estudioSchema = z.object({
   fk_id_candidato: z.number(),
   titulo: z.string(),
   descripcion: z.string(),
-  estado: z.string()
+  estado: z.enum(['cursando', 'finalizado']).default('cursando')
 })
 
 export function validateEstudio (object) {

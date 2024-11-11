@@ -15,7 +15,7 @@ export class Candidato {
     try {
       const { rows } = await pool.query(
         `SELECT
-         u.id_usuario, u.fk_id_ubicacion, u.nombre, u.email,
+         u.id_usuario AS usuario, u.fk_id_ubicacion, u.nombre, u.email, c.id_candidato AS candidato,
          c.apellido, c.genero, c.estado_civil, c.fecha_nacimiento, c.direccion, c.telefono, c.linkedin
          FROM Candidatos c JOIN Usuarios u ON c.fk_id_usuario = u.id_usuario
          WHERE c.fk_id_usuario = $1`,

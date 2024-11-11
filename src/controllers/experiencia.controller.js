@@ -36,6 +36,7 @@ export const getExperiencia = async (req, res) => {
 
 export const postExperiencia = async (req, res) => {
   try {
+    console.log(req.body)
     const data = validateExperiencia(req.body)
     const experiencia = await Experiencia.postExperiencia(data)
     return res.status(200).json(experiencia)
