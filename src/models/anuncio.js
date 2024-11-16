@@ -80,12 +80,13 @@ export class Anuncio {
   static async getAnuncioByIdDash ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT com.descripcion, com.puntaje,
-      com.fecha_actualizacion AS fecha, cand.apellido
-      FROM Comentarios com
-      JOIN Candidatos cand ON com.fk_id_candidato = cand.id_candidato
-      JOIN Empresas emp ON com.fk_id_empresa = emp.id_empresa
-      WHERE emp.fk_id_usuario = $1 ORDER BY com.fecha_actualizacion DESC LIMIT 10`,
+        `SELECT anun.id_anuncio,
+          are.nombre AS area, anun.titulo, anun.descripcion, anun.modalidad,
+          anun.cantidad_vacantes, anun.direccion, anun.fecha_actualizacion AS fecha
+          FROM Anuncios anun 
+        JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
+        JOIN Areas are ON anun.fk_id_area = are.id_area 
+        WHERE emp.fk_id_usuario = $1 ORDER BY anun.fecha_actualizacion DESC LIMIT 5 OFFSET 0`,
         [id]
       )
       return rows
