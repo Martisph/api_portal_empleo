@@ -4,7 +4,7 @@ import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerAnuncios = Router()
 
-routerAnuncios.get('/', getAllAnuncios)
+routerAnuncios.get('/all/:id', getAllAnuncios)
 
 routerAnuncios.get('/params/:params', getAnuncioByParams)
 

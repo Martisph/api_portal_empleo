@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
   res.render('index', user)
 })
 
-app.post('/prueba-experiencia', (req, res) => {
+app.post('/pruebademo', (req, res) => {
   console.log(req.body)
   res.status(200).json({ message: 'Experiencia laboral agregada' })
 })

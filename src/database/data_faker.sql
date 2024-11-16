@@ -24,10 +24,8 @@ INSERT INTO Categoria_Estudios (nombre, descripcion) VALUES
 ('Educación Secundaria', 'Etapa educativa que sigue a la primaria y prepara para estudios superiores o el mundo laboral. Bachillerato o su equivalente.'),
 ('Educación Técnica o Tecnológica', 'Estudios técnicos o tecnológicos que suelen durar entre 1 a 3 años, como carreras técnicas o tecnológicas.'),
 ('Educación Universitaria', 'Grados universitarios como licenciaturas (generalmente 4 años de estudio). Formación más amplia y teórica en una disciplina específica.'),
-('Postgrado', 'Estudios superiores a la licenciatura, como especializaciones y maestrías.'),
 ('Maestrías', 'Grado académico que generalmente dura entre 1 a 2 años, ofreciendo un conocimiento avanzado y habilidades especializadas en una disciplina específica.'),
-('Doctorados', 'Programas de estudio que representan el nivel más alto de formación académica, generalmente destinados a la investigación avanzada y que pueden durar varios años.'),
-('Sin estudio', 'Situación de concluir educacion basica - regular');
+('Doctorados', 'Programas de estudio que representan el nivel más alto de formación académica, generalmente destinados a la investigación avanzada y que pueden durar varios años.');
 
 -- #Departamentos
 INSERT INTO Departamentos (fk_id_pais, nombre) VALUES 

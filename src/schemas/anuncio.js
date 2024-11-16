@@ -9,21 +9,23 @@ const anuncioScrema = z.object({
   descripcion: z.string(),
   funciones: z.string(),
   requisitos: z.string(),
-  habilidades: z.string(),
-  requerimientos: z.string(),
+  habilidades: z.string().optional(),
+  requerimientos: z.string().optional(),
   beneficios: z.string(),
-  direccion: z.string(),
-  fecha_entrevista: z.string().date(),
+  direccion: z.string().optional(),
+  fecha_entrevista: z.string().date().optional(),
   tipo_contrato: z.string(),
   modalidad: z.string(),
   jornada_laboral: z.string(),
   horario_trabajo: z.string(),
-  cantidad_vacantes: z.number().int(),
-  salario_minimo: z.number(),
-  edad_minima: z.number().int(),
-  edad_maxima: z.number().int(),
+  cantidad_vacantes: z.number().int().optional(),
+  salario_minimo: z.number().optional(),
+  edad_minima: z.number().int().optional(),
+  edad_maxima: z.number().int().optional(),
   experiencia_anios: z.number().int().default(0),
-  estudio: z.string(),
+  estudio: z
+    .enum(['basico', 'secundaria', 'tecnico', 'universitario', 'postgrado'])
+    .default('basico'),
   discapacitados: z.boolean().default(false)
 })
 

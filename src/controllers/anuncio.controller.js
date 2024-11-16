@@ -3,7 +3,7 @@ import { validateAnuncio } from '../schemas/anuncio.js'
 
 export const getAllAnuncios = async (req, res) => {
   try {
-    const anuncios = await Anuncio.getAllAnuncios()
+    const anuncios = await Anuncio.getAllAnuncios(req.params)
     return res.status(200).json(anuncios)
   } catch (e) {
     return res.status(500).json({ message: e.message })

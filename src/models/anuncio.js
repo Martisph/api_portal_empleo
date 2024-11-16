@@ -22,16 +22,18 @@ function cleanParams (id) {
 }
 
 export class Anuncio {
-  static async getAllAnuncios () {
+  static async getAllAnuncios ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT anun.id_anuncio, emp.nombre AS empresa, ubic.nombre AS ubicacion,
-          are.nombre AS area, anun.titulo, anun.descripcion,
+        `SELECT anun.id_anuncio, ubic.nombre AS ubicacion,
+          are.nombre AS area, anun.titulo, anun.descripcion, anun.beneficios,
           anun.direccion, anun.discapacitados, anun.fecha_actualizacion AS fecha
           FROM Anuncios anun 
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
-        JOIN Areas are ON anun.fk_id_area = are.id_area ORDER BY anun.fecha_actualizacion DESC LIMIT 5 OFFSET 5`
+        JOIN Areas are ON anun.fk_id_area = are.id_area 
+        WHERE emp.fk_id_usuario = $1 ORDER BY anun.fecha_actualizacion DESC LIMIT 5 OFFSET 0`,
+        [id]
       )
       return rows
     } catch (e) {
@@ -43,8 +45,9 @@ export class Anuncio {
     const { area, ubicacion } = cleanParams(params)
 
     let baseQuery = `SELECT emp.nombre AS empresa, are.nombre AS area, 
-          anun.id_anuncio, anun.direccion, ubic.nombre AS ubicacion,
-          anun.titulo, anun.descripcion, anun.estudio, anun.discapacitados
+          ubic.nombre AS ubicacion, anun.id_anuncio, anun.direccion, anun.titulo, anun.descripcion,
+          anun.estudio, anun.experiencia_anios AS experiencia, anun.horario_trabajo AS horario,
+          anun.salario_minimo AS salario, anun.discapacitados, anun.fecha_actualizacion AS fecha
           FROM Anuncios anun  
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
@@ -94,8 +97,8 @@ export class Anuncio {
   static async getAnuncioById ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT emp.nombre AS empresa, ubic.nombre AS ubicacion, are.nombre AS area,
-          anun.fk_id_categoria_estudio, anun.titulo, anun.descripcion,
+        `SELECT emp.id_empresa AS empresa_id, emp.nombre AS empresa, ubic.nombre AS ubicacion, are.nombre AS area,
+          cat_est.nombre AS estudios, anun.id_anuncio, anun.titulo, anun.descripcion,
           anun.funciones, anun.requisitos, anun.habilidades,
           anun.requerimientos, anun.beneficios, anun.direccion,
           anun.fecha_entrevista, anun.tipo_contrato, anun.modalidad,
@@ -106,6 +109,7 @@ export class Anuncio {
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
         JOIN Areas are ON anun.fk_id_area = are.id_area
+        JOIN Categoria_Estudios cat_est ON cat_est.id_categoria_estudio = anun.fk_id_categoria_estudio
         WHERE anun.id_anuncio =$1`,
         [id]
       )
@@ -117,6 +121,7 @@ export class Anuncio {
 
   static async postAnuncio ({ data }) {
     try {
+      console.log(data)
       const { rows } = await pool.query(
         `INSERT INTO Anuncios(
         fk_id_empresa,

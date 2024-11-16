@@ -6,13 +6,16 @@ import {
   getPostulacionByCandidato,
   getPostulaciones,
   postPostulacion,
-  putPostulacion
+  putPostulacion,
+  getPostulacionByEmpresaAll
 } from '../controllers/postulacion.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
 
 export const routerPostulaciones = Router()
 
 routerPostulaciones.get('/', getPostulaciones) // agregar despues de las pruebas
+
+routerPostulaciones.get('/posit-all-empresa/:id', userSesionMiddleware, getPostulacionByEmpresaAll)
 
 routerPostulaciones.get('/posit-empresa/:id', userSesionMiddleware, getPostulacionByEmpresa)
 

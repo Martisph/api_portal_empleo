@@ -10,6 +10,18 @@ export const getPostulaciones = async (req, res) => {
   }
 }
 
+export const getPostulacionByEmpresaAll = async (req, res) => {
+  try {
+    const postulacion = await Postulacion.getPostulacionByEmpresaAll(req.params)
+    if (!postulacion) {
+      return res.status(404).json({ message: ' Dato no encontrado ' })
+    }
+    return res.status(200).json(postulacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const getPostulacionByEmpresa = async (req, res) => {
   try {
     const postulacion = await Postulacion.getPostulacionByEmpresa(req.params)
