@@ -4,6 +4,7 @@ import {
   getPostulacion,
   getPostulacionByEmpresa,
   getPostulacionByCandidato,
+  getPostulacionByQuery,
   getPostulaciones,
   postPostulacion,
   putPostulacion,
@@ -20,6 +21,8 @@ routerPostulaciones.get('/posit-all-empresa/:id', userSesionMiddleware, getPostu
 routerPostulaciones.get('/posit-empresa/:id', userSesionMiddleware, getPostulacionByEmpresa)
 
 routerPostulaciones.get('/posit-candidato/:id', userSesionMiddleware, getPostulacionByCandidato)
+
+routerPostulaciones.get('/query', userSesionMiddleware, getPostulacionByQuery)
 
 routerPostulaciones.get('/:id', userSesionMiddleware, getPostulacion)
 

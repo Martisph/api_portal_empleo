@@ -1,4 +1,5 @@
 import { Postulacion } from '../models/postulacion.js'
+import { PostulacionQuery } from '../models/postulacion_query.js'
 import { validatePostulacion } from '../schemas/postulacion.js'
 
 export const getPostulaciones = async (req, res) => {
@@ -14,7 +15,19 @@ export const getPostulacionByEmpresaAll = async (req, res) => {
   try {
     const postulacion = await Postulacion.getPostulacionByEmpresaAll(req.params)
     if (!postulacion) {
-      return res.status(404).json({ message: ' Dato no encontrado ' })
+      return res.status(404).json({ message: ' Datos no encontrados ' })
+    }
+    return res.status(200).json(postulacion)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
+export const getPostulacionByQuery = async (req, res) => {
+  try {
+    const postulacion = await PostulacionQuery.postulacionQuery(req.query)
+    if (!postulacion) {
+      return res.status(404).json({ message: ' Datos no encontrados ' })
     }
     return res.status(200).json(postulacion)
   } catch (e) {

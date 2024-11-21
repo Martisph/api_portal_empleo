@@ -6,6 +6,8 @@ CREATE DATABASE witreeljobsdb;
 -- Conectar a la base de datos witreeljobsdb
 \c witreeljobsdb
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
 CREATE TABLE Paises (
     id_pais SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE
@@ -141,7 +143,8 @@ CREATE TABLE Anuncios (
     edad_maxima INT,
     experiencia_anios INT,
     estudio VARCHAR(100),
-    discapacitados BOOLEAN,
+    discapacitados BOOLEAN DEFAULT FALSE,
+    estado BOOLEAN DEFAULT FALSE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
