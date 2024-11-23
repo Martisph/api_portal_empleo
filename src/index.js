@@ -20,14 +20,16 @@ import {
 } from './routes/index.js'
 import { PORT } from './config.js'
 import { requireRefreshToken } from './middlewares/requiredToken.js'
-import { corsMiddleware } from './middlewares/cors.js'
+// import { corsMiddleware } from './middlewares/cors.js'
+import cors from 'cors'
 
 const app = express()
 
 app.disable('x-powered-by')
 app.use(express.json()) // Middelware para filtrar datos json
 app.use(cookieParser())
-app.use(corsMiddleware())
+// app.use(corsMiddleware())
+app.use(cors())
 app.use(requireRefreshToken)
 
 app.get('/', (req, res) => {
