@@ -88,7 +88,6 @@ export class Postulacion {
   }
 
   static async postPostulacion ({ data }) {
-    console.log(data)
     try {
       const { rows } = await pool.query(
       `INSERT INTO Postulaciones

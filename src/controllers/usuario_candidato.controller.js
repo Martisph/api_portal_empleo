@@ -6,7 +6,6 @@ import { validateCandidato } from '../schemas/candidato.js'
 
 export const postUsuarioC = async (req, res) => {
   try {
-    console.log(req.body)
     const dataUsuario = validateUsuario(req.body)
     const dataCandidato = validateCandidato(req.body)
     if (dataUsuario.success && dataCandidato.success) {
@@ -15,7 +14,6 @@ export const postUsuarioC = async (req, res) => {
     } else {
       return res.status(400).json({ error: ' Ingreso de datos erroneos ' })
     }
-    console.log('pasando los filtros de registro de usuario')
     await pool.query('BEGIN')
     const usuario = await Usuario.postUsuario(dataUsuario)
     const candidato = await Candidato.postCandidato(usuario, dataCandidato)

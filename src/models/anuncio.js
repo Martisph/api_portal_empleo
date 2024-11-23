@@ -122,7 +122,6 @@ export class Anuncio {
 
   static async postAnuncio ({ data }) {
     try {
-      console.log(data)
       const { rows } = await pool.query(
         `INSERT INTO Anuncios(
         fk_id_empresa,

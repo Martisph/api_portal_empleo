@@ -5,7 +5,7 @@ const comentarioSchema = z.object({
   fk_id_empresa: z.number(),
   descripcion: z.string(),
   puntaje: z.number(),
-  estado: z.string()
+  estado: z.enum(['no leido', 'leido']).default('no leido')
 })
 
 export function validateComentario (object) {

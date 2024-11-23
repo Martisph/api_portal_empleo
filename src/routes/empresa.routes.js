@@ -8,6 +8,7 @@ import {
   putEmpresa
 } from '../controllers/empresa.controller.js'
 import { userSesionMiddleware } from '../middlewares/userSesion.js'
+import { postUsuarioE } from '../controllers/usuario_empresa.controller.js'
 
 export const routerEmpresas = Router()
 
@@ -18,6 +19,8 @@ routerEmpresas.get('/basic-info/:id', getEmpresaBasicInfo)
 routerEmpresas.get('/:id', getEmpresa)
 
 routerEmpresas.post('/', postEmpresa)
+
+routerEmpresas.post('/create', postUsuarioE)
 
 routerEmpresas.delete('/:id', userSesionMiddleware, deleteEmpresa)
 

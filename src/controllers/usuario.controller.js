@@ -25,13 +25,9 @@ export const getUsuario = async (req, res) => {
 export const postUsuario = async (req, res) => {
   try {
     const data = validateUsuario(req.body)
-    console.log(data)
     const email = await Usuario.existsEmail(validateEmailUsuario(req.body))
     if (email) return res.status(400).json({ message: ' Email ya existe ' })
     const usuario = await Usuario.postUsuario(data)
-    console.log(usuario)
-    console.log('este es el id del usuario')
-    console.log(usuario.id_usuario)
     return res.status(200).json(usuario)
   } catch (e) {
     return res.status(500).json({ message: e.message })

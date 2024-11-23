@@ -39,7 +39,6 @@ export class Experiencia {
   }
 
   static async postExperiencia ({ data }) {
-    console.log(data)
     try {
       const { rows } = await pool.query(
         `INSERT INTO Experiencias
