@@ -1,6 +1,9 @@
 import { Postulacion } from '../models/postulacion.js'
 import { PostulacionQuery } from '../models/postulacion_query.js'
-import { validatePostulacion } from '../schemas/postulacion.js'
+import {
+  validatePostulacion,
+  validatePartialPostulacion
+} from '../schemas/postulacion.js'
 
 export const getPostulaciones = async (req, res) => {
   try {
@@ -73,9 +76,16 @@ export const getPostulacion = async (req, res) => {
 
 export const postPostulacion = async (req, res) => {
   try {
-    const data = validatePostulacion(req.body)
-    const postulacion = await Postulacion.postPostulacion(data)
-    return res.status(200).json(postulacion)
+    const postulacionSuccess = await Postulacion.verifyPostulacion(
+      validatePartialPostulacion(req.body)
+    )
+    if (postulacionSuccess) {
+      const data = validatePostulacion(req.body)
+      const postulacion = await Postulacion.postPostulacion(data)
+      return res.status(200).json(postulacion)
+    } else {
+      return res.status(409).json({ message: ' Ya postulastes a este anuncio ' })
+    }
   } catch (e) {
     return res.status(500).json({ message: e.message })
   }
