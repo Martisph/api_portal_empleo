@@ -141,4 +141,30 @@ export class Postulacion {
       throw new Error(' Internal error ' + e.message)
     }
   }
+
+  static async verifyPostulacion ({ data }) {
+    try {
+      // eslint-disable-next-line camelcase
+      const { fk_id_candidato } = data
+      // eslint-disable-next-line camelcase
+      const { fk_id_anuncio } = data
+      const { rows } = await pool.query(
+        `SELECT id_postulacion
+          FROM Postulaciones post 
+          WHERE fk_id_candidato = $1 AND fk_id_anuncio = $2`,
+        [
+          // eslint-disable-next-line camelcase
+          fk_id_candidato,
+          // eslint-disable-next-line camelcase
+          fk_id_anuncio
+        ]
+      )
+      if (rows.length !== 0) {
+        return false
+      }
+      return true
+    } catch (e) {
+      throw new Error(' Internal Error ' + e)
+    }
+  }
 }
