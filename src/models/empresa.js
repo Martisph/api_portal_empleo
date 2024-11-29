@@ -85,34 +85,24 @@ export class Empresa {
 
   static async putEmpresa ({ id }, { data }) {
     try {
+      const keys = Object.keys(data).filter((key) => data[key] !== undefined)
+
+      if (keys.length === 0) {
+        throw new Error('No se proporcionaron datos para actualizar')
+      }
+
+      const setClause = keys
+        .map((key, index) => `${key} = $${index + 1}`)
+        .join(', ')
+      const values = keys.map((key) => data[key])
+
+      values.push(id)
+
       const { rows } = await pool.query(
-        `UPDATE Empresas SET 
-          nombre = $1,
-          razon_social = $2,
-          descripcion = $3,
-          ruc = $4,
-          vision = $5,
-          mision = $6,
-          valores = $7,
-          sector = $8,
-          direccion = $9,
-          telefono = $10,
-          email = $11
-        WHERE id_empresa = $12 RETURNING *`,
-        [
-          data.nombre,
-          data.razon_social,
-          data.descripcion,
-          data.ruc,
-          data.vision,
-          data.mision,
-          data.valores,
-          data.sector,
-          data.direccion,
-          data.telefono,
-          data.email,
-          id
-        ]
+        `UPDATE Empresas SET ${setClause} WHERE id_empresa = $${
+          keys.length + 1
+        } RETURNING *`,
+        values
       )
       return rows[0]
     } catch (e) {

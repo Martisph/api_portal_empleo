@@ -1,5 +1,5 @@
 import { Empresa } from '../models/empresa.js'
-import { validateEmpresa } from '../schemas/empresa.js'
+import { validateEmpresa, validatePartialEmpresa } from '../schemas/empresa.js'
 
 export const getEmpresas = async (req, res) => {
   try {
@@ -57,7 +57,7 @@ export const deleteEmpresa = async (req, res) => {
 
 export const putEmpresa = async (req, res) => {
   try {
-    const data = validateEmpresa(req.body)
+    const data = validatePartialEmpresa(req.body)
     const empresa = await Empresa.putEmpresa(req.params, data)
     return res.json(empresa)
   } catch (e) {

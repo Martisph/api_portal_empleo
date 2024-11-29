@@ -18,7 +18,7 @@ export class Postulacion {
   static async getPostulacionByEmpresa ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT usu.nombre, cand.apellido, anun.titulo, post.estado, 
+        `SELECT emp.id_empresa AS empresa_id,  usu.nombre, cand.id_candidato AS candidato_id, cand.apellido, anun.titulo, post.estado, 
           post.fecha_creacion AS fecha
           FROM Postulaciones post
           JOIN Candidatos cand ON post.fk_id_candidato = cand.id_candidato
