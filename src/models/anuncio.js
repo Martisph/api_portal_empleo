@@ -25,9 +25,9 @@ export class Anuncio {
   static async getAllAnuncios ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT anun.id_anuncio, ubic.nombre AS ubicacion,
+        `SELECT anun.id_anuncio, ubic.nombre AS ubicacion, anun.discapacitados,
           are.nombre AS area, anun.titulo, anun.descripcion, anun.beneficios,
-          anun.direccion, anun.discapacitados, anun.fecha_actualizacion AS fecha
+          anun.direccion, anun.fecha_actualizacion AS fecha, anun.estado
           FROM Anuncios anun 
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
@@ -52,7 +52,7 @@ export class Anuncio {
         JOIN Empresas emp ON anun.fk_id_empresa = emp.id_empresa
         JOIN Ubicaciones ubic ON anun.fk_id_ubicacion = ubic.id_ubicacion
         JOIN Areas are ON anun.fk_id_area = are.id_area
-        WHERE 1=1`
+        WHERE 1=1 AND anun.estado = true`
 
     const queryParams = []
 
@@ -201,61 +201,26 @@ export class Anuncio {
 
   static async putAnuncio ({ id }, { data }) {
     try {
+      const keys = Object.keys(data).filter((key) => data[key] !== undefined)
+
+      if (keys.length === 0) {
+        throw new Error('No se proporcionaron datos para actualizar')
+      }
+
+      const setClause = keys
+        .map((key, index) => `${key} = $${index + 1}`)
+        .join(', ')
+      const values = keys.map((key) => data[key])
+
+      values.push(id)
+
       const { rows } = await pool.query(
-        `UPDATE Anuncios SET 
-        fk_id_empresa = $1,
-        fk_id_ubicacion = $2,
-        fk_id_area = $3,
-        fk_id_categoria_estudio = $4,
-        titulo = $5,
-        descripcion = $6,
-        funciones = $7,
-        requisitos = $8,
-        habilidades = $9,
-        requerimientos = $10,
-        beneficios = $11,
-        direccion = $12,
-        fecha_entrevista = $13,
-        tipo_contrato = $14,
-        modalidad = $15,
-        jornada_laboral = $16,
-        horario_trabajo = $17,
-        cantidad_vacantes = $18,
-        salario_minimo = $19,
-        edad_minima = $20,
-        edad_maxima = $21,
-        experiencia_anios = $22,
-        estudio = $23,
-        discapacitados = $24
-        WHERE id_anuncio = $25 RETURNING *`,
-        [
-          data.fk_id_empresa,
-          data.fk_id_ubicacion,
-          data.fk_id_area,
-          data.fk_id_categoria_estudio,
-          data.titulo,
-          data.descripcion,
-          data.funciones,
-          data.requisitos,
-          data.habilidades,
-          data.requerimientos,
-          data.beneficios,
-          data.direccion,
-          data.fecha_entrevista,
-          data.tipo_contrato,
-          data.modalidad,
-          data.jornada_laboral,
-          data.horario_trabajo,
-          data.cantidad_vacantes,
-          data.salario_minimo,
-          data.edad_minima,
-          data.edad_maxima,
-          data.experiencia_anios,
-          data.estudio,
-          data.discapacitados,
-          id
-        ]
+        `UPDATE Anuncios SET ${setClause} WHERE id_anuncio = $${
+          keys.length + 1
+        } RETURNING *`,
+        values
       )
+
       return rows[0]
     } catch (e) {
       throw new Error(' Internal error ' + e.message)

@@ -25,8 +25,9 @@ const anuncioScrema = z.object({
   experiencia_anios: z.number().int().default(0),
   estudio: z
     .enum(['basico', 'secundaria', 'tecnico', 'universitario', 'postgrado'])
-    .default('basico'),
-  discapacitados: z.boolean().default(false)
+    .default('basico').optional(),
+  discapacitados: z.boolean().default(false),
+  estado: z.boolean().optional()
 })
 
 export function validateAnuncio (object) {

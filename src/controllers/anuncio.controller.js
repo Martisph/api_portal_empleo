@@ -1,5 +1,5 @@
 import { Anuncio } from '../models/anuncio.js'
-import { validateAnuncio } from '../schemas/anuncio.js'
+import { validateAnuncio, validatePartialAnuncio } from '../schemas/anuncio.js'
 
 export const getAllAnuncios = async (req, res) => {
   try {
@@ -69,7 +69,7 @@ export const deleteAnuncio = async (req, res) => {
 
 export const putAnuncio = async (req, res) => {
   try {
-    const data = validateAnuncio(req.body)
+    const data = validatePartialAnuncio(req.body)
     const anuncio = await Anuncio.putAnuncio(req.params, data)
     return res.json(anuncio)
   } catch (e) {

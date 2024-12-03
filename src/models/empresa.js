@@ -30,7 +30,7 @@ export class Empresa {
   static async getEmpresa ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT e.fk_id_usuario, e.nombre, e.razon_social, e.descripcion, e.ruc,
+        `SELECT e.fk_id_usuario, e.id_empresa, e.nombre, e.razon_social, e.descripcion, e.ruc,
           e.vision, e.mision, e.valores, e.sector, e.direccion, e.telefono, e.email
           FROM Empresas e 
           JOIN Usuarios u ON e.fk_id_usuario = u.id_usuario 
