@@ -22,6 +22,18 @@ export const getCandidato = async (req, res) => {
   }
 }
 
+export const getCandidatoById = async (req, res) => {
+  try {
+    const candidato = await Candidato.getCandidatoById(req.params)
+    if (!candidato) {
+      return res.status(404).json({ message: ' Candidato no encontrado ' })
+    }
+    return res.status(200).json(candidato)
+  } catch (e) {
+    return res.status(500).json({ message: e.message })
+  }
+}
+
 export const postCandidato = async (req, res) => {
   try {
     const data = validateCandidato(req.body)

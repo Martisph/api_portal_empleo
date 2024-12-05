@@ -105,7 +105,7 @@ export const deletePostulacion = async (req, res) => {
 
 export const putPostulacion = async (req, res) => {
   try {
-    const data = validatePostulacion(req.body)
+    const data = validatePartialPostulacion(req.body)
     const postulacion = await Postulacion.putPostulacion(req.params, data)
     return res.json(postulacion)
   } catch (e) {

@@ -27,6 +27,36 @@ export class Candidato {
     }
   }
 
+  static async getCandidatoById ({ id }) {
+    try {
+      const { rows } = await pool.query(
+        `WITH Candidato_cv AS(
+          SELECT us.email, us.nombre, cand.id_candidato, cand.apellido, cand.genero,
+            cand.estado_civil, cand.fecha_nacimiento,
+            cand.direccion, cand.telefono, cand.linkedin, CONCAT( ubic.nombre, ', ', dep.nombre) AS ubicacion,
+            DATE_PART('year', AGE(cand.fecha_nacimiento)) AS edad,
+            STRING_AGG(idi.nombre || ' \n ' || idi.nivel, ',') AS idiomas,
+            STRING_AGG(est.titulo || ' \n ' || est.descripcion || ' \n ' || est.estado, ',') AS estudios,
+            STRING_AGG(ex.titulo || ' \n '|| ex.descripcion || ' \n '|| ex.estado || ' \n '|| ex.fecha_inicio || ' \n '|| ex.fecha_fin, ',') AS experiencias
+          FROM Candidatos cand 
+          INNER JOIN Usuarios us ON cand.fk_id_usuario = us.id_usuario
+          INNER JOIN Ubicaciones ubic ON us.fk_id_ubicacion = ubic.id_ubicacion
+          INNER JOIN Departamentos dep ON ubic.fk_id_departamento = dep.id_departamento
+          LEFT JOIN Idiomas idi ON idi.fk_id_candidato = cand.id_candidato
+          LEFT JOIN Estudios est ON est.fk_id_candidato = cand.id_candidato
+          LEFT JOIN Experiencias ex ON ex.fk_id_candidato = cand.id_candidato
+          GROUP BY cand.id_candidato, us.id_usuario, ubic.nombre, dep.nombre
+          )
+          SELECT * FROM Candidato_cv
+          WHERE id_candidato = $1`,
+        [id]
+      )
+      return rows[0]
+    } catch (e) {
+      throw new Error(' Internal error ' + e)
+    }
+  }
+
   static async postCandidato ({ id_usuario }, { data }) {
     try {
       const { rows } = await pool.query(

@@ -121,21 +121,26 @@ export class Postulacion {
 
   static async putPostulacion ({ id }, { data }) {
     try {
+      const keys = Object.keys(data).filter((key) => data[key] !== undefined)
+
+      if (keys.length === 0) {
+        throw new Error('No se proporcionaron datos para actualizar')
+      }
+
+      const setClause = keys
+        .map((key, index) => `${key} = $${index + 1}`)
+        .join(', ')
+      const values = keys.map((key) => data[key])
+
+      values.push(id)
+
       const { rows } = await pool.query(
-      `UPDATE Postulaciones SET
-            fk_id_candidato = $1,
-            fk_id_empresa = $2,
-            fk_id_anuncio = $3,
-            estado = $4
-            WHERE id_postulacion = $5 RETURNING *`,
-      [
-        data.fk_id_candidato,
-        data.fk_id_empresa,
-        data.fk_id_anuncio,
-        data.estado,
-        id
-      ]
+        `UPDATE Postulaciones SET ${setClause} WHERE id_postulacion = $${
+          keys.length + 1
+        } RETURNING *`,
+        values
       )
+
       return rows[0]
     } catch (e) {
       throw new Error(' Internal error ' + e.message)
