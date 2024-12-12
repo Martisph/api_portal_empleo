@@ -15,9 +15,11 @@ export class Candidato {
     try {
       const { rows } = await pool.query(
         `SELECT
-         u.id_usuario AS usuario, u.fk_id_ubicacion, u.nombre, u.email, c.id_candidato AS candidato,
+         u.id_usuario AS usuario, ub.nombre AS ubicacion, u.nombre, u.email, c.id_candidato AS candidato,
          c.apellido, c.genero, c.estado_civil, c.fecha_nacimiento, c.direccion, c.telefono, c.linkedin
-         FROM Candidatos c JOIN Usuarios u ON c.fk_id_usuario = u.id_usuario
+         FROM Candidatos c 
+         JOIN Usuarios u ON c.fk_id_usuario = u.id_usuario
+         JOIN Ubicaciones ub ON u.fk_id_ubicacion = ub.id_ubicacion
          WHERE c.fk_id_usuario = $1`,
         [id]
       )
@@ -35,15 +37,17 @@ export class Candidato {
             cand.estado_civil, cand.fecha_nacimiento,
             cand.direccion, cand.telefono, cand.linkedin, CONCAT( ubic.nombre, ', ', dep.nombre) AS ubicacion,
             DATE_PART('year', AGE(cand.fecha_nacimiento)) AS edad,
-            STRING_AGG(idi.nombre || ' \n ' || idi.nivel, ',') AS idiomas,
-            STRING_AGG(est.titulo || ' \n ' || est.descripcion || ' \n ' || est.estado, ',') AS estudios,
-            STRING_AGG(ex.titulo || ' \n '|| ex.descripcion || ' \n '|| ex.estado || ' \n '|| ex.fecha_inicio || ' \n '|| ex.fecha_fin, ',') AS experiencias
+            STRING_AGG(DISTINCT idi.nombre || ' \n ' || idi.nivel, ',') AS idiomas,
+            STRING_AGG(DISTINCT COALESCE(cat_est.nombre, 'Sin Categoría') || ' \n ' ||  est.titulo || ' \n ' || est.descripcion || ' \n ' || est.estado, ',') AS estudios,
+            STRING_AGG(DISTINCT ex.titulo || ' \n '|| ex.descripcion || ' \n '|| ex.estado || ' \n '|| ex.fecha_inicio || ' \n '|| ex.fecha_fin, ',') AS experiencias,
+            SUM(DATE_PART('year', COALESCE(ex.fecha_fin, CURRENT_DATE)) - DATE_PART('year', ex.fecha_inicio)) AS total_experiencia
           FROM Candidatos cand 
           INNER JOIN Usuarios us ON cand.fk_id_usuario = us.id_usuario
           INNER JOIN Ubicaciones ubic ON us.fk_id_ubicacion = ubic.id_ubicacion
           INNER JOIN Departamentos dep ON ubic.fk_id_departamento = dep.id_departamento
           LEFT JOIN Idiomas idi ON idi.fk_id_candidato = cand.id_candidato
           LEFT JOIN Estudios est ON est.fk_id_candidato = cand.id_candidato
+          LEFT JOIN Categoria_Estudios cat_est ON est.fk_id_categoria_estudio = cat_est.id_categoria_estudio
           LEFT JOIN Experiencias ex ON ex.fk_id_candidato = cand.id_candidato
           GROUP BY cand.id_candidato, us.id_usuario, ubic.nombre, dep.nombre
           )

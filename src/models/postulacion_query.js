@@ -13,6 +13,7 @@ export class PostulacionQuery {
         experiencia,
         aniosExperiencia,
         genero,
+        anuncio,
         id
       } = data
 
@@ -21,17 +22,19 @@ export class PostulacionQuery {
             SELECT
               post.id_postulacion,
               post.fk_id_empresa AS id_empresa,
+              post.fk_id_anuncio AS id_anuncio,
               post.estado,
               are.nombre AS categoria,
               usu.nombre AS nomUsuario,
               cand.id_candidato,
               cand.apellido,
+              cand.direccion,
               cand.genero,
               DATE_PART('year', AGE(cand.fecha_nacimiento)) AS edad,
               CONCAT( ubic.nombre, ', ', dep.nombre) AS ubicacion,
               STRING_AGG(DISTINCT idiom.nombre || ' (' || idiom.nivel || ')', ', ') AS idiomas,
               STRING_AGG(DISTINCT exp.titulo || ' (' || exp.estado || ')', ' ') AS experiencias,
-              STRING_AGG(DISTINCT est.titulo || ' en ' || COALESCE(cat_est.nombre, 'Sin Categoría'), ' ') AS estudios,
+              STRING_AGG(DISTINCT COALESCE(cat_est.nombre, 'Sin Categoría') || ' en ' || est.titulo, ' - ') AS estudios,
               SUM(COALESCE(
               DATE_PART('year', COALESCE(exp.fecha_fin, CURRENT_DATE)) - DATE_PART('year', exp.fecha_inicio),
                 0
@@ -50,7 +53,7 @@ export class PostulacionQuery {
             GROUP BY post.id_postulacion, cand.id_candidato, cand.apellido,
             cand.fecha_nacimiento, ubic.nombre, are.nombre, dep.nombre, nomUsuario
           )
-          SELECT total_experiencia,
+          SELECT total_experiencia, id_anuncio, cand.direccion,
             estudios, experiencias, idiomas, ubicacion, edad, genero, apellido,
             id_candidato, nomUsuario, categoria, estado, id_postulacion
           FROM Candidato_Info cand
@@ -141,10 +144,14 @@ export class PostulacionQuery {
       }
 
       if (ubicacion) {
-        query += ` AND regexp_replace(
-                    unaccent(lower(ubicacion)), 
-                    '[^a-z0-9 ]', '', 'g'
-                  ) ILIKE $${params.length + 1}`
+        query += ` AND (
+          regexp_replace(unaccent(lower(ubicacion)), '[^a-z0-9 ]', '', 'g') ILIKE $${
+            params.length + 1
+          }
+          OR regexp_replace(unaccent(lower(cand.direccion)), '[^a-z0-9 ]', '', 'g') ILIKE $${
+            params.length + 1
+          }
+        )`
         params.push(
           `%${ubicacion
             .normalize('NFD')
@@ -153,6 +160,12 @@ export class PostulacionQuery {
             .toLowerCase()}%`
         )
       }
+
+      if (anuncio) {
+        query += ` AND id_anuncio = $${params.length + 1}`
+        params.push(anuncio)
+      }
+
       if (id) {
         query += ` AND emp.fk_id_usuario = $${params.length + 1}`
         params.push(id)

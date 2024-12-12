@@ -18,14 +18,15 @@ export class Postulacion {
   static async getPostulacionByEmpresa ({ id }) {
     try {
       const { rows } = await pool.query(
-        `SELECT emp.id_empresa AS empresa_id,  usu.nombre, cand.id_candidato AS candidato_id, cand.apellido, anun.titulo, post.estado, 
-          post.fecha_creacion AS fecha
+        `SELECT emp.id_empresa AS empresa_id,  usu.nombre, cand.id_candidato AS candidato_id, cand.apellido, 
+          anun.titulo, post.estado, post.fecha_creacion AS fecha
           FROM Postulaciones post
           JOIN Candidatos cand ON post.fk_id_candidato = cand.id_candidato
           JOIN Usuarios usu ON usu.id_usuario = cand.fk_id_usuario
           JOIN Empresas emp ON post.fk_id_empresa = emp.id_empresa
           JOIN Anuncios anun ON post.fk_id_anuncio = anun.id_anuncio
-          WHERE emp.fk_id_usuario = $1 ORDER BY post.fecha_creacion DESC LIMIT 10`,
+          WHERE emp.fk_id_usuario = $1 AND post.estado NOT IN ('rechazado', 'pendiente')
+          ORDER BY post.fecha_creacion DESC LIMIT 15`,
         [id]
       )
       return rows
